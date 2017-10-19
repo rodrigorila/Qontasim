@@ -61,9 +61,24 @@ ValidateVersions()
 
 
 @app.route("/nueva", methods=['GET'])
-def nueva():
+def nueva_GET():
     reservas = Reservas.query.all()
     return render_template('nueva.html', Reservas= reservas)
+
+@app.route("/inputSamples/", methods=['POST'])
+def nueva_POST():
+
+    nombre = request.form.get('Nombre', None)
+    telefono = request.form.get('Telefono', None)
+    fecha = request.form.get('Fecha', None)
+    hora = request.form.get('Hora', None)
+
+    reserva = Reservas(Nombre = nombre, Telefono=telefono, Creacion=datetime.now(),
+                       Reserva = reserva_de_fecha_hora(fecha, hora))
+    db.session.add(reserva)
+    db.session.commit()
+
+    return render_template('inputSamplesSubmitted.html', name=name, password=password, remember=remember)
 
 @app.route("/", methods=['GET'])
 def main():

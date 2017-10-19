@@ -11,27 +11,92 @@
                 <h1 >Nueva reserva</h1>
             </div>
         </div>
-    </div>
-    <form>
-        <div class="form-group">
-            <label for="Nombre">Nombre:</label>
-            <input type="text" class="form-control" id="Nombre" autofocus />
-        </div>
-        <div class="form-group">
-            <label for="Telefono">Teléfono:</label>
-            <input type="text" class="form-control" id="Telefono" />
-        </div>
-        <div class="form-group">
-            <label for="Fecha">Fecha:</label>
-            <input type="datetime-local" class="form-control" id="Fecha" />
-        </div>
-        <div class="form-group">
-            <label for="Hora">Hora:</label>
-            <input type="time" class="form-control" id="Hora" />
-        </div>
+        <form class="form-control-static">
+            <div class="form-group">
+                <label for="Nombre">Nombre:</label>
+                <input type="text" class="form-control" id="Nombre" autofocus />
+            </div>
+            <div class="form-group">
+                <label for="Telefono">Teléfono:</label>
+                <input type="number" class="form-control" id="Telefono" />
+            </div>
+            <div class="form-group">
+                <label for="email">e-mail:</label>
+                <input type="email" class="form-control" id="email" />
+            </div>
+            <div class="form-group">
+                <label for="Fecha">Fecha:</label>
+                <input type="datetime-local" class="form-control" id="Fecha" />
+            </div>
+            <div class="form-group">
+                <label for="Personas">Personas:</label>
+                <input type="number" class="form-control" id="Personas" />
+            </div>
+            <div class="form-group">
+                <label for="Hora">Hora:</label>
+                <input type="time" class="form-control" id="Hora" list="HorasDisponibles" />
+                <datalist id="HorasDisponibles">
+                    <option value="9:00 am">
+                    <option value="10:00 am">
+                    <option value="11:00 am">
+                    <option value="12:00 pm">
+                    <option value="1:00 pm">
+                    <option value="2:00 pm">
+                    <option value="3:00 pm">
+                    <option value="4:00 pm">
+                    <option value="5:00 pm">
+                    <option value="6:00 pm">
+                    <option value="7:00 pm">
+                    <option value="8:00 pm">
+                    <option value="9:00 pm">
+                    <option value="10:00 pm">
+                    <option value="11:00 pm">
+                    <option value="12:00 am">
+                    <option value="01:00 am">
+                </datalist>
+            </div>
+            <div class="form-group">
+                <select name="Icecream Flavours" class="form-control">
+                    <option value="double chocolate">Double Chocolate</option>
+                    <option value="vanilla">Vanilla</option>
+                    <option value="strawberry">Strawberry</option>
+                    <option value="caramel">Caramel</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <div class="container">
+                    <div class="row">
+                        <div class='col-sm-6'>
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker5'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker5').datetimepicker({
+                                    defaultDate: "11/1/2013",
+                                    disabledDates: [
+                                        moment("12/25/2013"),
+                                        new Date(2013, 11 - 1, 21),
+                                        "11/22/2013 00:53"
+                                    ]
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
 
-        <button type="submit" class="btn btn-primary btn-lg">Aceptar</button>
-        <button type="button" class="btn btn-primary btn-lg"><a href="/"></a>Cancelar</button>
-    </form>
+            <div class="container-fluid">
+                <button type="submit" class="btn btn-primary btn-lg">Aceptar</button>
+                <button type="button" class="btn btn-primary btn-lg"><a href="/"></a>Cancelar</button>
+            </div>
+        </form>
+    </div>
 
 {% endblock %}
