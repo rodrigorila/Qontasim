@@ -1,6 +1,6 @@
 from datetime import datetime, date
 
-from flask import Flask, render_template, flash, request
+from flask import Flask, render_template, flash, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 
@@ -59,14 +59,22 @@ def ValidateVersions():
 
 ValidateVersions()
 
+@app.route("/counter", methods=['GET'])
+def counter():
+    return render_template("counter.html")
+
 
 @app.route("/nueva", methods=['GET'])
-def nueva_GET():
+def nueva():
     reservas = Reservas.query.all()
     return render_template('nueva.html', Reservas= reservas)
 
-@app.route("/inputSamples/", methods=['POST'])
-def nueva_POST():
+
+@app.route("/agregar", methods=['POST'])
+def agregar():
+    def reserva_de_fecha_hora(fecha, hora):
+        # datetime.date.today() + datetime.timedelta(days=1)
+        return datetime.now()
 
     nombre = request.form.get('Nombre', None)
     telefono = request.form.get('Telefono', None)
@@ -78,7 +86,8 @@ def nueva_POST():
     db.session.add(reserva)
     db.session.commit()
 
-    return render_template('inputSamplesSubmitted.html', name=name, password=password, remember=remember)
+    return redirect("/")
+
 
 @app.route("/", methods=['GET'])
 def main():

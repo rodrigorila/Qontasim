@@ -11,30 +11,26 @@
                 <h1 >Nueva reserva</h1>
             </div>
         </div>
-        <form class="form-control-static">
+        <form class="form-control-static" action="/agregar" method="post">
             <div class="form-group">
                 <label for="Nombre">Nombre:</label>
-                <input type="text" class="form-control" id="Nombre" autofocus />
+                <input type="text" class="form-control" id="Nombre" name="Nombre" required autofocus />
             </div>
             <div class="form-group">
                 <label for="Telefono">Teléfono:</label>
-                <input type="number" class="form-control" id="Telefono" />
+                <input type="tel" class="form-control" id="Telefono" name="Telefono" required />
             </div>
             <div class="form-group">
                 <label for="email">e-mail:</label>
-                <input type="email" class="form-control" id="email" />
+                <input type="email" class="form-control" id="email" name="email" />
             </div>
             <div class="form-group">
                 <label for="Fecha">Fecha:</label>
-                <input type="datetime-local" class="form-control" id="Fecha" />
-            </div>
-            <div class="form-group">
-                <label for="Personas">Personas:</label>
-                <input type="number" class="form-control" id="Personas" />
+                <input type="date" class="form-control" id="Fecha" name="Fecha" required />
             </div>
             <div class="form-group">
                 <label for="Hora">Hora:</label>
-                <input type="time" class="form-control" id="Hora" list="HorasDisponibles" />
+                <input type="time" class="form-control" id="Hora" name="Hora" list="HorasDisponibles" required />
                 <datalist id="HorasDisponibles">
                     <option value="9:00 am">
                     <option value="10:00 am">
@@ -56,45 +52,12 @@
                 </datalist>
             </div>
             <div class="form-group">
-                <select name="Icecream Flavours" class="form-control">
-                    <option value="double chocolate">Double Chocolate</option>
-                    <option value="vanilla">Vanilla</option>
-                    <option value="strawberry">Strawberry</option>
-                    <option value="caramel">Caramel</option>
-                </select>
+                <label for="Personas">Personas:</label>
+                <input type="number" min=1 value=1 class="form-control" id="Personas" name="Personas" required />
             </div>
-            <div class="form-group">
-                <div class="container">
-                    <div class="row">
-                        <div class='col-sm-6'>
-                            <div class="form-group">
-                                <div class='input-group date' id='datetimepicker5'>
-                                    <input type='text' class="form-control" />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <script type="text/javascript">
-                            $(function () {
-                                $('#datetimepicker5').datetimepicker({
-                                    defaultDate: "11/1/2013",
-                                    disabledDates: [
-                                        moment("12/25/2013"),
-                                        new Date(2013, 11 - 1, 21),
-                                        "11/22/2013 00:53"
-                                    ]
-                                });
-                            });
-                        </script>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container-fluid">
+            <div class="container">
                 <button type="submit" class="btn btn-primary btn-lg">Aceptar</button>
-                <button type="button" class="btn btn-primary btn-lg"><a href="/"></a>Cancelar</button>
+                <a href="/" class="btn btn-primary btn-lg">Cancelar</a>
             </div>
         </form>
     </div>

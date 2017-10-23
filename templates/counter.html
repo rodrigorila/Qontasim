@@ -1,0 +1,83 @@
+<!doctype html>
+
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+
+    <style>
+    p {
+      text-align: center;
+      font-size: 60px;
+    }
+    </style>
+</head>
+<body>
+
+<input type="text" value="10/21/2017 23:00" id="date"></input>
+<p id="milliseconds"></p>
+<p id="days"></p>
+<p id="hours"></p>
+<p id="minutes"></p>
+<p id="seconds"></p>
+<p id="status"></p>
+
+<script src="{{ url_for('static', filename='base.js') }}"></script>
+<script src="{{ url_for('static', filename='reservation.js') }}"></script>
+<script>
+    var user_date = document.getElementById("date");
+    var txt_milliseconds = document.getElementById("milliseconds");
+    var txt_days = document.getElementById("days");
+    var txt_hours = document.getElementById("hours");
+    var txt_minutes = document.getElementById("minutes");
+    var txt_seconds = document.getElementById("seconds");
+    var txt_reservation_status = document.getElementById("status");
+
+    function show_lapse(lapse) {
+
+        if (txt_milliseconds != null)
+            txt_milliseconds.innerHTML = "Milliseconds: {0}".format(lapse.milliseconds);
+
+        if (txt_days != null)
+            txt_days.innerHTML = "Days: {0}".format(lapse.days);
+
+        if (txt_hours != null)
+            txt_hours.innerHTML = "Hours: {0}".format(lapse.hours);
+
+        if (txt_minutes != null)
+            txt_minutes.innerHTML = "Minutes: {0}".format(lapse.minutes);
+
+        if (txt_seconds != null)
+            txt_seconds.innerHTML = "Seconds: {0}".format(lapse.seconds);
+    }
+
+    function show_status(status) {
+        if (txt_reservation_status != null)
+            txt_reservation_status.innerHTML = "Status: {0}".format(status);
+    }
+
+    var reservation_status_timer = setInterval(function() {
+
+        var reference_date = new Date(user_date.value);
+
+        if (isNaN(reference_date)){
+            show_status(" error !!!");
+
+            return;
+        }
+
+        var r = new Reservation(reference_date);
+
+        var lapse = r.get_lapse();
+
+        show_lapse(lapse);
+
+        var status = r.get_status(lapse);
+
+        show_status(status);
+    },
+    1000);
+</script>
+
+</body>
+</html>
