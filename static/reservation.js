@@ -48,6 +48,9 @@ function Reservation(date){
 
     function get_lapse_between(initial, final) {
 
+//        console.log("inicial: "+initial);
+//        console.log("final: "+final);
+
         var distance = final - initial;
         var distance_abs = Math.abs(distance);
 

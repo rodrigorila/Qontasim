@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 from flask import Flask, render_template, flash, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
@@ -26,11 +26,43 @@ class Reservas(db.Model):
 db.drop_all()
 db.create_all()
 
-mamanis = Reservas(Nombre='Rosendo Mamani y Familia', Telefono='758-18931', Creacion=datetime.now(), Reserva=datetime.now())
-choques = Reservas(Nombre='Jhonny Choque', Telefono='375-9998', Creacion=datetime.now(), Reserva=datetime.now())
+julio = Reservas(
+    Nombre='Julio Ortega y Familia',
+    Telefono='758-18931',
+    Creacion=datetime.now(),
+    Reserva=datetime.today() + timedelta(minutes=15))
 
-db.session.add(mamanis)
-db.session.add(choques)
+
+isabel = Reservas(
+    Nombre='Isabel Lozano',
+    Telefono='689-34545',
+    Creacion=datetime.now(),
+    Reserva=datetime.today() + timedelta(minutes=30))
+
+
+dolores = Reservas(
+    Nombre='Dolores Flores',
+    Telefono='758-18931',
+    Creacion=datetime.now(),
+    Reserva=datetime.today() + timedelta(hours=2))
+
+silvia = Reservas(
+    Nombre='Silvia Savioncelo',
+    Telefono='758-18931',
+    Creacion=datetime.now(),
+    Reserva=datetime.today() + timedelta(hours=5))
+
+amanda = Reservas(
+    Nombre='Amanda Moratti',
+    Telefono='375-9998',
+    Creacion=datetime.now(),
+    Reserva=datetime.today() + timedelta(hours=10))
+
+db.session.add(julio)
+db.session.add(isabel)
+db.session.add(dolores)
+db.session.add(silvia)
+db.session.add(amanda)
 db.session.commit()
 
 print ("Query all: {0}".format(Reservas.query.all()))
