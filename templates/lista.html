@@ -4,9 +4,15 @@
 {% block navbar %}
 {% endblock %}
 
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/lista.css')}}">
+    <!--<link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">-->
+{% endblock %}
+
 {% block content %}
     <div class="container">
-        <table class="table table-striped table-bordered table-hover table-condensed" id="table_reservas">
+        <table class="table table-responsive table-condensed" id="table_reservas">
             <thead>
                 <tr>
                     <th colspan="1" class="text-left">Reservas</th>
@@ -14,25 +20,24 @@
             </thead>
             <tbody>
             {% for reserva in Reservas %}
-            <!--<tr>-->
-                <!--<td class="text-left">{{ reserva.Nombre }}</td>-->
-                <!--<td class="text-right">{{ reserva.Telefono }}</td>-->
-                <!--<td id = "Date">{{ reserva.Reserva }}</td>-->
-                <!--<td id = "DueTime" class="text-center"></td>-->
-            <!--</tr>-->
-
-            <tr>
-                <td class="text-left" colspan="2"><h1>{{ reserva.Nombre }}</h1></td>
-                <td class="text-center" rowspan="2" id = "DueTime{{loop.index}}"></td>
-                <td class="text-center" rowspan="2"><button class="btn btn-primary btn-lg">Ingresar</button></td>
-                <td class="text-center" rowspan="2"><button class="btn btn-primary btn-lg">Cancelar</button></td>
-            </tr>
-            <tr>
-                <td class="text-right small">{{ reserva.Telefono }}</td>
-                <td class="text-center small" id = "Date{{loop.index}}">{{ reserva.Reserva }}</td>
-            </tr>
-
-
+                <tr>
+                    <td class="text-left" colspan="2"><h1>{{ reserva.Nombre }}</h1></td>
+                    <td class="text-center" style="vertical-align: middle;" rowspan="2" id = "DueTime{{loop.index}}"></td>
+                    <td class="text-center" style="vertical-align: middle;" rowspan="2">
+                        <button class="btn btn-primary btn-lg" onclick="use_reservation({{ reserva.ID }})">
+                            Ingresar
+                        </button>
+                    </td>
+                    <td class="text-center" style="vertical-align: middle;" rowspan="2">
+                        <button class="btn btn-primary btn-lg" onclick="cancel_reservation({{ reserva.ID }})">
+                            Cancelar
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right small">{{ reserva.Telefono }}</td>
+                    <td class="text-center small" id = "Date{{loop.index}}">{{ reserva.Reserva }}</td>
+                </tr>
             {% endfor %}
 
             </tbody>
@@ -44,7 +49,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     {{super()}}
 
     <script src="{{ url_for('static', filename='base.js') }}"></script>
@@ -69,5 +73,13 @@
             }
         },
         1000);
+
+        function use_reservation(id) {
+          console.log("use: " + id);
+        }
+
+        function cancel_reservation(id) {
+          console.log("cancel: " + id);
+        }
     </script>
 {% endblock %}
