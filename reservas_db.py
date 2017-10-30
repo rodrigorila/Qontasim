@@ -1,21 +1,22 @@
 from datetime import datetime, timedelta, date
-from sqlalchemy_base import base, initalize_database
+from sqlalchemy_base import sqla, initalize_database
 from sqlalchemy import desc, and_
 
 
 import uuid
 # Column(String(32), default=lambda: uuid.uuid4().hex, primary_key=True)
 
-class Reservas(base.Model):
-    ID = base.Column(base.Integer, primary_key=True)
+class Reservas(sqla.Model):
+    ID = sqla.Column(sqla.Integer, primary_key=True)
     # ID = db.Column(db.String(32), default=lambda: uuid.uuid4().hex, primary_key=True)
-    Creacion = base.Column(base.DateTime, nullable=False, default=datetime.now())
-    Nombre = base.Column(base.String(240), nullable=False)
-    Telefono = base.Column(base.String(40), nullable=True)
-    Reserva = base.Column(base.DateTime, nullable=False, default=datetime.now())
+    Creacion = sqla.Column(sqla.DateTime, nullable=False, default=datetime.now())
+    Nombre = sqla.Column(sqla.String(240), nullable=False)
+    Telefono = sqla.Column(sqla.String(40), nullable=True)
+    NroPersonas = sqla.Column(sqla.Integer, nullable=False, default=1)
+    Reserva = sqla.Column(sqla.DateTime, nullable=False, default=datetime.now())
 
     def __repr__(self):
-        return '<Reserva {0} para {1}>'.format(self.ID, self.Nombre)
+        return '<Reserva {0} de {1} para {2} personas en fecha {3}>'.format(self.ID, self.Nombre, self.NroPersonas, self.Reserva)
 
     @staticmethod
     def __reserva_de_fecha_hora__(fecha, hora):
@@ -26,8 +27,8 @@ class Reservas(base.Model):
     def add(nombre, telefono, fecha, hora):
         reserva = Reservas(Nombre=nombre, Telefono=telefono, Creacion=datetime.now(),
                            Reserva=Reservas.__reserva_de_fecha_hora__(fecha, hora))
-        base.session.add(reserva)
-        base.session.commit()
+        sqla.session.add(reserva)
+        sqla.session.commit()
 
     @staticmethod
     def query_today():
@@ -45,8 +46,8 @@ class Reservas(base.Model):
     def init_app(app):
         initalize_database(app)
 
-        base.drop_all()
-        base.create_all()
+        sqla.drop_all()
+        sqla.create_all()
 
         reservas = [
             Reservas(
@@ -91,7 +92,7 @@ class Reservas(base.Model):
                 Creacion=datetime.now(),
                 Reserva=datetime.today() + timedelta(hours=10))]
 
-        base.session.add_all(reservas)
-        base.session.commit()
+        sqla.session.add_all(reservas)
+        sqla.session.commit()
 
         print("Query all: {0}".format(Reservas.query.all()))

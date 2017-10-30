@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 
-base = SQLAlchemy()
+sqla = SQLAlchemy()
 
 def initalize_database(app):
-    base.init_app(app)
-    base.app = app # esto es truco o está bien ????
+    sqla.init_app(app)
+    sqla.app = app # esto es truco o está bien ????

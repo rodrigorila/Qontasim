@@ -27,7 +27,11 @@
             <div class="form-group">
                 <label for="inpDate">Fecha:</label>
                 <input type="date" class="form-control" id="inpDate" name="Fecha" required />
-                <button type="button" class="btn btn-xs" id="btnToday">Hoy</button>
+                <button type="button" class="btn btn-xs" tag="DateChange" action_parameter="Today">Hoy</button>
+                <button type="button" class="btn btn-xs" tag="DateChange" action_parameter="Tomorrow">Mañana</button>
+                <button type="button" class="btn btn-xs" tag="DateChange" action_parameter="DayAfterTomorrow">Pasado mañana</button>
+                <button type="button" class="btn btn-xs" tag="DateChange" action_parameter="Increment">+</button>
+                <button type="button" class="btn btn-xs" tag="DateChange" action_parameter="Decrement">-</button>
             </div>
             <div class="form-group">
                 <label for="Hora">Hora:</label>
@@ -69,13 +73,50 @@
     {{super()}}
 
     <script src="{{ url_for('static', filename='base.js') }}"></script>
-    <script src="{{ url_for('static', filename='jquery-3.2.1-jquery.min.js') }}"></script>
     <script>
-        $(document).ready(function(){
-            $("#btnToday").click(function(){
-                var d = new Date();
-                var n = d.toString();
-                $("#inpDate").val(n);
+        //short version of: $(document).ready(function(){
+        $(function(){
+            $("button[tag='DateChange']").click(function(){
+                var a = $(this).attr("action_parameter");
+                var p = $("#inpDate");
+
+                switch(a) {
+                    case "Today":
+                        p.val(offset_date_from_today_as_string(0));
+                        break;
+                    case "Tomorrow":
+                        p.val(offset_date_from_today_as_string(1));
+                        break;
+                    case "DayAfterTomorrow":
+                        p.val(offset_date_from_today_as_string(2));
+                        break;
+                    case "Increment":
+                        var si = offset_date_as_string(p.val(), +1);
+                        if (!(si === undefined))
+                            p.val(si);
+                        break;
+                    case "Decrement":
+                        var sd = offset_date_as_string(p.val(), -1);
+                        if (!(sd === undefined))
+                            p.val(sd);
+                        break;
+                };
+            });
+
+            $("#inpDate").change(function(){
+                if (!is_valid_date($(this))){
+                    //document.getElementById('inpDate').setCustomValidity("{0} is not a valid date".format(p.val()));
+                    $(this).setCustomValidity("{0} is not a valid date".format(p.val()));
+//                    p.attr("validationMessage", "{0} is not a valid date".format(p.val()));
+                }
+                else
+                    $(this).setCustomValidity("");
+            });
+
+            $("form").submit(function(e){
+                if (!this.checkValidity()){
+                    e.preventDefault();
+                }
             });
         });
     </script>
