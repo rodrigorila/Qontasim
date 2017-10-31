@@ -33,7 +33,7 @@ class Reservas(sqla.Model):
     @staticmethod
     def query_today():
         # return Reservas.query.order_by(desc(Reservas.Reserva)).all()
-        print(date.today())
+        # print(date.today())
         return Reservas.query.filter(and_(
             Reservas.Reserva >= date.today(),
             Reservas.Reserva < date.today() + timedelta(days=1))).order_by(Reservas.Reserva).all()
@@ -43,13 +43,15 @@ class Reservas(sqla.Model):
         return Reservas.query.all()
 
     @staticmethod
-    def init_app(app):
-        initalize_database(app)
+    def range_dates(from_date, to_date, delta):
+        d = from_date
+        while d <= to_date:
+            yield d
+            d = d + delta
 
-        sqla.drop_all()
-        sqla.create_all()
-
-        reservas = [
+    @staticmethod
+    def range_date_minutes():
+        return [
             Reservas(
                 Nombre='Ayersondio Perales',
                 Telefono='758-18931',
@@ -92,7 +94,38 @@ class Reservas(sqla.Model):
                 Creacion=datetime.now(),
                 Reserva=datetime.today() + timedelta(hours=10))]
 
+    @staticmethod
+    def __generate_reservas__(from_date, to_date, delta):
+        list = []
+        for d in Reservas.range_dates(from_date, to_date, delta):
+            list.append(
+                Reservas(
+                    Nombre = d,
+                    Telefono = d,
+                    Creacion = datetime.now(),
+                    Reserva = d)
+            )
+        return list
+
+    @staticmethod
+    def init_app(app):
+        initalize_database(app)
+
+        sqla.drop_all()
+        sqla.create_all()
+
+        # reservas = Reservas.__default_reservas__()
+
+        # reservas = Reservas.__generate_reservas__(
+        #     datetime(2017,10,29),
+        #     datetime(2017,11,2),
+        #     timedelta(minutes=1)
+        # )
+        reservas = Reservas.__generate_reservas__(
+            datetime(2017,10,31),
+            datetime(2017,11,1),
+            timedelta(hours=1)
+        )
+
         sqla.session.add_all(reservas)
         sqla.session.commit()
-
-        print("Query all: {0}".format(Reservas.query.all()))

@@ -1,0 +1,85 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Lista de reservas{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/lista.css')}}">
+    <!--<link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">-->
+
+{% endblock %}
+
+{% block content %}
+    <div id="table_container" class="container">
+    </div>
+    <div class="container">
+        <a href="/new_reservation" class="btn btn-primary btn-lg">Nueva</a>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+
+    <script src="{{ url_for('static', filename='base.js') }}"></script>
+    <script src="{{ url_for('static', filename='reservation.js') }}"></script>
+    <script src="{{ url_for('static', filename='reservations_table.js') }}"></script>
+    <script>
+        var table_loaded = false;
+
+        function collect_reservations_table(){
+
+            $("#table_container").html("<p>Cargando...</p>");
+            table_loaded =false;
+
+            $.post("get_reservations", {
+                filter: "today",
+                auto_hide: false
+            },
+            function(data, status){
+                if (status == "success") {
+                    $("#table_container").html(data);
+                    table_loaded = true;
+                }
+            });
+        };
+
+        $(document).ready(function(){
+
+            collect_reservations_table();
+
+            var reservation_status_timer = setInterval(function() {
+                //var numOfVisibleRows = $('tr').filter(function() {
+                //    return $(this).css('display') !== 'none';
+                //}).length;
+                //console.log("visible rows: " + numOfVisibleRows);
+
+                //list of all visible rows
+                //var algo = $('tr').filter(':visible');
+                //console.log(algo.length);
+
+                if (!table_loaded)
+                    return;
+
+                $("td[tag='tag_status']").each(function(){
+                    var reservation = $(this).attr('reservation_date');
+
+                    var r = new Reservation(new Date(reservation));
+
+                    var lapse = r.get_lapse();
+
+                    $(this).html(r.get_status(lapse));
+                });
+            }, 1000);
+
+            $("a[tag='tag_enter']").click(function(){
+                console.log("Enter: " + $(this).attr("reservation_id"));
+            });
+
+            $("a[tag='tag_cancel']").click(function(){
+                console.log("Cancel: " + $(this).attr("reservation_id"));
+            });
+        });
+    </script>
+{% endblock %}

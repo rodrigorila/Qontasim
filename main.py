@@ -44,12 +44,12 @@ def counter():
     return render_template("counter.html")
 
 
-@app.route("/nueva", methods=['GET'])
+@app.route("/new_reservation", methods=['GET'])
 def nueva():
-    return render_template('nueva.html')
+    return render_template('new_reservation.html')
 
 
-@app.route("/agregar", methods=['POST'])
+@app.route("/add_reservation", methods=['POST'])
 def agregar():
     nombre = request.form.get('Nombre', None)
     telefono = request.form.get('Telefono', None)
@@ -61,9 +61,23 @@ def agregar():
     return redirect("/")
 
 
-@app.route("/lista", methods=['GET'])
-def lista():
-    return render_template('lista.html', Reservas = Reservas.query_today())
+@app.route("/get_reservations", methods=['POST'])
+def get_reservations():
+    filter = request.form.get('filter', None)
+    auto_hide = request.form.get('auto_hide', True)
+
+    filters = {
+        'today': lambda: Reservas.query_today(),
+        'tomorrow': lambda: Reservas.query_today(),
+    }
+
+    query = filters.get(filter, lambda: "Filter {0} does not exist".format(filter));
+
+    return render_template('reservations_table.html', Reservas = query())
+
+@app.route("/show_reservations", methods=['GET'])
+def show_reservations():
+    return render_template('reservations.html')
 
 
 @app.route("/", methods=['GET'])

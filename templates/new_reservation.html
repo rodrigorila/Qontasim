@@ -11,7 +11,7 @@
                 <h1 >Nueva reserva</h1>
             </div>
         </div>
-        <form class="form-control-static" action="/agregar" method="post">
+        <form class="form-control-static" action="/add_reservation" method="post">
             <div class="form-group">
                 <label for="Nombre">Nombre:</label>
                 <input type="text" class="form-control" id="Nombre" name="Nombre" required autofocus />
@@ -104,19 +104,11 @@
             });
 
             $("#inpDate").change(function(){
-                if (!is_valid_date($(this))){
-                    //document.getElementById('inpDate').setCustomValidity("{0} is not a valid date".format(p.val()));
-                    $(this).setCustomValidity("{0} is not a valid date".format(p.val()));
-//                    p.attr("validationMessage", "{0} is not a valid date".format(p.val()));
+                if (!is_valid_date($(this).val())){
+                    $(this)[0].setCustomValidity("{0} no es una fecha válida".format($(this).val()));
                 }
                 else
-                    $(this).setCustomValidity("");
-            });
-
-            $("form").submit(function(e){
-                if (!this.checkValidity()){
-                    e.preventDefault();
-                }
+                    $(this)[0].setCustomValidity("");
             });
         });
     </script>
