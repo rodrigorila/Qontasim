@@ -1,15 +1,21 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}Q'ontasim - Sach'a{% endblock %}
 
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('static', filename='stylesheets/reservations.css')}}">
+{% endblock %}
+
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="col-sm-1" style="margin: 5px;">
-                <img src="static\LogoSacha.png" class="img-circle" alt="Cinque Terre" width="96" height="96">
-            </div>
-            <div class="col-sm-3" style="padding:5px;">
-                <h1 >Nueva reserva</h1>
-            </div>
+        <div class="reservations-heading">
+            <span class="reservations-heading-image-container">
+                <img class="reservations-heading-image" src="static\LogoSacha.png">
+            </span>
+            <span class="reservations-heading-text-container">
+                Nueva reserva
+            </span>
         </div>
         <form class="form-control-static" action="/add_reservation" method="post">
             <div class="form-group">

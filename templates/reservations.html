@@ -6,12 +6,19 @@
 
 {% block styles %}
     {{super()}}
-    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/lista.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/reservations.css')}}">
     <!--<link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">-->
-
 {% endblock %}
 
 {% block content %}
+    <div class="reservations-heading">
+        <span class="reservations-heading-image-container">
+            <img class="reservations-heading-image" src="static\LogoSacha.png">
+        </span>
+        <span class="reservations-heading-text-container">
+            Reservas
+        </span>
+    </div>
     <div id="table_container" class="container">
     </div>
     <div class="container">
@@ -24,9 +31,60 @@
 
     <script src="{{ url_for('static', filename='base.js') }}"></script>
     <script src="{{ url_for('static', filename='reservation.js') }}"></script>
-    <script src="{{ url_for('static', filename='reservations_table.js') }}"></script>
     <script>
         var table_loaded = false;
+
+        function hide_reservation(id, color){
+            var my_rows = $("tr[tag='tag_info_row_{0}']".format(id));
+            my_rows.css("background-color", color)
+            my_rows.hide(480);
+        };
+
+        function attach_actions_to_table_controls(){
+            $("a[tag='tag_enter']").click(function(){
+
+                $.post("change_reservation", {
+                    action: "enter",
+                    id: $(this).attr('reservation_id')
+                },
+                function(data, status){
+                    if (status == "success")
+                        hide_reservation(data, "green");
+                });
+            });
+
+            $("a[tag='tag_cancel']").click(function(){
+                $.post("change_reservation", {
+                    action: "cancel",
+                    id: $(this).attr('reservation_id')
+                },
+                function(data, status){
+                    if (status == "success")
+                        hide_reservation(data, "red");
+                });
+            });
+        };
+
+        function review_reservations_waiting_message(){
+            //var numOfVisibleRows = $('tr').filter(function() {
+            //    return $(this).css('display') !== 'none';
+            //}).length;
+            //console.log("visible rows: " + numOfVisibleRows);
+
+            //list of all visible rows
+            //var algo = $('tr').filter(':visible');
+            //console.log(algo.length);
+
+            $("td[tag='tag_status']").each(function(){
+                var reservation = $(this).attr('reservation_date');
+
+                var r = new Reservation(new Date(reservation));
+
+                var lapse = r.get_lapse();
+
+                $(this).html(r.get_status(lapse));
+            });
+        };
 
         function collect_reservations_table(){
 
@@ -40,6 +98,8 @@
             function(data, status){
                 if (status == "success") {
                     $("#table_container").html(data);
+                    attach_actions_to_table_controls();
+                    review_reservations_waiting_message();
                     table_loaded = true;
                 }
             });
@@ -50,36 +110,11 @@
             collect_reservations_table();
 
             var reservation_status_timer = setInterval(function() {
-                //var numOfVisibleRows = $('tr').filter(function() {
-                //    return $(this).css('display') !== 'none';
-                //}).length;
-                //console.log("visible rows: " + numOfVisibleRows);
-
-                //list of all visible rows
-                //var algo = $('tr').filter(':visible');
-                //console.log(algo.length);
-
                 if (!table_loaded)
                     return;
 
-                $("td[tag='tag_status']").each(function(){
-                    var reservation = $(this).attr('reservation_date');
-
-                    var r = new Reservation(new Date(reservation));
-
-                    var lapse = r.get_lapse();
-
-                    $(this).html(r.get_status(lapse));
-                });
+                review_reservations_waiting_message();
             }, 1000);
-
-            $("a[tag='tag_enter']").click(function(){
-                console.log("Enter: " + $(this).attr("reservation_id"));
-            });
-
-            $("a[tag='tag_cancel']").click(function(){
-                console.log("Cancel: " + $(this).attr("reservation_id"));
-            });
         });
     </script>
 {% endblock %}

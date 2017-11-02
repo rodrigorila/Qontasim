@@ -1,14 +1,11 @@
-<table class="table table-responsive table-condensed" id="table_reservations">
-    <thead>
-        <tr>
-            <th class="text-left" colspan="5">Reservas</th>
-        </tr>
-    </thead>
+<table id="table_reservations" class="table table-responsive table-condensed">
     <tbody>
     {% for reserva in Reservas %}
-        <tr>
+        <tr tag="tag_info_row_{{ reserva.ID }}">
             <td class="text-left" colspan="2"><h1>{{ reserva.Nombre }}</h1></td>
-            <td tag = "tag_status" reservation_date = "{{ reserva.Reserva }}" class="text-center" rowspan="2" style="vertical-align: middle;"></td>
+            <td tag = "tag_status" reservation_date = "{{ reserva.Reserva }}" class="text-center" rowspan="2" style="vertical-align: middle;">
+
+            </td>
             <td class="text-center" rowspan="2" style="vertical-align: middle;">
                 <a tag="tag_enter" reservation_id="{{ reserva.ID }}" style="cursor:pointer">
                     <h1><span class="glyphicon glyphicon-ok-circle"></span></h1>
@@ -20,8 +17,8 @@
                 </a>
             </td>
         </tr>
-        <tr>
-            <td class="text-right small">{{ reserva.Telefono }}</td>
+        <tr tag="tag_info_row_{{ reserva.ID }}">
+            <td class="text-center small">{{ reserva.Telefono }}</td>
             <td tag="tag_date" class="text-center small">{{ reserva.Reserva }}</td>
         </tr>
     {% endfor %}

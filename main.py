@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, make_response
 from flask_bootstrap import Bootstrap
 from reservas_db import Reservas
 
@@ -63,17 +63,37 @@ def agregar():
 
 @app.route("/get_reservations", methods=['POST'])
 def get_reservations():
-    filter = request.form.get('filter', None)
+    lapse = request.form.get('filter')
     auto_hide = request.form.get('auto_hide', True)
 
-    filters = {
-        'today': lambda: Reservas.query_today(),
-        'tomorrow': lambda: Reservas.query_today(),
+    lapses = {
+        'today': lambda: Reservas.query_days_from_now(0),
+        'tomorrow': lambda: Reservas.query_days_from_now(1),
     }
 
-    query = filters.get(filter, lambda: "Filter {0} does not exist".format(filter));
+    query = lapses.get(lapse, lambda: print("Filter {0} does not exist".format(lapse)));
 
     return render_template('reservations_table.html', Reservas = query())
+
+@app.route("/change_reservation", methods=['POST'])
+def change_reservation():
+    action = request.form.get('action')
+    id = request.form.get('id')
+
+    actions = {
+        'enter': lambda: Reservas.enter(id),
+        'cancel': lambda: Reservas.cancel(id),
+    }
+
+    method = actions.get(action, lambda: print("Action {0} does not exist".format(action)));
+
+    method()
+
+    return make_response(id, 200)
+
+
+
+
 
 @app.route("/show_reservations", methods=['GET'])
 def show_reservations():

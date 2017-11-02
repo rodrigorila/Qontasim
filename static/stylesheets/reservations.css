@@ -1,0 +1,30 @@
+.lista-middle-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.reservations-heading {
+    background-color: black;
+    width:100%;
+}
+
+.reservations-heading-image-container {
+    block: inline;
+    height: 10vw;
+}
+
+.reservations-heading-image {
+    display: inline;
+    margin-left: auto;
+    margin-right: auto;
+    height: 10vw;
+}
+
+.reservations-heading-text-container {
+    display: inline;
+    padding-left: 10vw;
+    vertical-align: middle;
+    font-size: 7vw;
+    text-align: center;
+    color: white;
+}

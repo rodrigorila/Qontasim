@@ -14,6 +14,7 @@ class Reservas(sqla.Model):
     Telefono = sqla.Column(sqla.String(40), nullable=True)
     NroPersonas = sqla.Column(sqla.Integer, nullable=False, default=1)
     Reserva = sqla.Column(sqla.DateTime, nullable=False, default=datetime.now())
+    Estado = sqla.Column(sqla.String(10), nullable=False, default="pendiente")
 
     def __repr__(self):
         return '<Reserva {0} de {1} para {2} personas en fecha {3}>'.format(self.ID, self.Nombre, self.NroPersonas, self.Reserva)
@@ -31,16 +32,26 @@ class Reservas(sqla.Model):
         sqla.session.commit()
 
     @staticmethod
-    def query_today():
+    def query_days_from_now(days):
         # return Reservas.query.order_by(desc(Reservas.Reserva)).all()
         # print(date.today())
-        return Reservas.query.filter(and_(
-            Reservas.Reserva >= date.today(),
-            Reservas.Reserva < date.today() + timedelta(days=1))).order_by(Reservas.Reserva).all()
+        return Reservas.query.filter(
+            and_(
+                Reservas.Reserva >= date.today() + timedelta(days=days),
+                Reservas.Reserva < date.today() + timedelta(days=days+1)
+            )).order_by(Reservas.Reserva).all()
 
     @staticmethod
-    def today():
-        return Reservas.query.all()
+    def enter(id):
+        r = Reservas.query.get(id)
+        r.Estado = "ingresada"
+        sqla.session.commit()
+
+    @staticmethod
+    def cancel(id):
+        r = Reservas.query.get(id)
+        r.Estado = "cancelada"
+        sqla.session.commit()
 
     @staticmethod
     def range_dates(from_date, to_date, delta):
@@ -50,7 +61,7 @@ class Reservas(sqla.Model):
             d = d + delta
 
     @staticmethod
-    def range_date_minutes():
+    def __default_reservas__():
         return [
             Reservas(
                 Nombre='Ayersondio Perales',
@@ -114,18 +125,18 @@ class Reservas(sqla.Model):
         sqla.drop_all()
         sqla.create_all()
 
-        # reservas = Reservas.__default_reservas__()
+        reservas = Reservas.__default_reservas__()
 
         # reservas = Reservas.__generate_reservas__(
         #     datetime(2017,10,29),
         #     datetime(2017,11,2),
         #     timedelta(minutes=1)
         # )
-        reservas = Reservas.__generate_reservas__(
-            datetime(2017,10,31),
-            datetime(2017,11,1),
-            timedelta(hours=1)
-        )
+        # reservas = Reservas.__generate_reservas__(
+        #     datetime(2017,10,31),
+        #     datetime(2017,11,1),
+        #     timedelta(hours=1)
+        # )
 
         sqla.session.add_all(reservas)
         sqla.session.commit()

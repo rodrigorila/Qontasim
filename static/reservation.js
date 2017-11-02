@@ -4,21 +4,21 @@ function Reservation(date){
     function overdue_text(days, hours, minutes) {
 
         if (days == 1)
-            return "Vencida: Ayer".format(days);
+            return "Vencida Ayer".format(days);
 
         if (days > 0)
-            return "Vencida: {0} días".format(days);
+            return "Vencida {0} días".format(days);
 
         if (hours == 1)
-            return "Vencida: {0} hora".format(hours);
+            return "Vencida {0} hora".format(hours);
 
         if (hours > 0)
-            return "Vencida: {0} horas".format(hours);
+            return "Vencida {0} horas".format(hours);
 
         if (minutes < 15)
             return "En espera";
 
-        return "Vencida: {0} minutos".format(minutes);
+        return "Vencida {0} minutos".format(minutes);
     }
 
     function waiting_text(days, hours, minutes, seconds) {
@@ -59,7 +59,12 @@ function Reservation(date){
         var minutes = Math.floor((distance_abs % (1000.0 * 60.0 * 60.0)) / (1000.0 * 60.0));
         var seconds = Math.floor((distance_abs % (1000.0 * 60.0)) / 1000.0);
 
-        return {milliseconds: distance, days: days, hours: hours, minutes: minutes, seconds: seconds};
+        return {
+            milliseconds: distance,
+            days: days,
+            hours: hours,
+            minutes: minutes,
+            seconds: seconds};
     }
 
     this.get_lapse = function() {
