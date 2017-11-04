@@ -67,6 +67,7 @@ def get_reservations():
     auto_hide = request.form.get('auto_hide', True)
 
     lapses = {
+        'all': lambda: Reservas.query_all(),
         'today': lambda: Reservas.query_days_from_now(0),
         'tomorrow': lambda: Reservas.query_days_from_now(1),
     }
@@ -74,6 +75,7 @@ def get_reservations():
     query = lapses.get(lapse, lambda: print("Filter {0} does not exist".format(lapse)));
 
     return render_template('reservations_table.html', Reservas = query())
+
 
 @app.route("/change_reservation", methods=['POST'])
 def change_reservation():
@@ -90,9 +92,6 @@ def change_reservation():
     method()
 
     return make_response(id, 200)
-
-
-
 
 
 @app.route("/show_reservations", methods=['GET'])

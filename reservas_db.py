@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, date
 from sqlalchemy_base import sqla, initalize_database
-from sqlalchemy import desc, and_
+from sqlalchemy import asc, and_
 
 
 import uuid
@@ -33,13 +33,15 @@ class Reservas(sqla.Model):
 
     @staticmethod
     def query_days_from_now(days):
-        # return Reservas.query.order_by(desc(Reservas.Reserva)).all()
-        # print(date.today())
         return Reservas.query.filter(
             and_(
                 Reservas.Reserva >= date.today() + timedelta(days=days),
                 Reservas.Reserva < date.today() + timedelta(days=days+1)
             )).order_by(Reservas.Reserva).all()
+
+    @staticmethod
+    def query_all():
+        return Reservas.query.order_by(asc(Reservas.Reserva)).all()
 
     @staticmethod
     def enter(id):
@@ -64,13 +66,13 @@ class Reservas(sqla.Model):
     def __default_reservas__():
         return [
             Reservas(
-                Nombre='Ayersondio Perales',
+                Nombre='Andrés Cortazar',
                 Telefono='758-18931',
                 Creacion=datetime.now(),
                 Reserva=date.today() - timedelta(days=1)),
 
             Reservas(
-                Nombre='Mañanedio Peponi',
+                Nombre='Olga Martinez',
                 Telefono='758-18931',
                 Creacion=datetime.now(),
                 Reserva=date.today() + timedelta(days=1)),
@@ -78,6 +80,12 @@ class Reservas(sqla.Model):
             Reservas(
                 Nombre='Julio Ortega y Familia',
                 Telefono='758-18931',
+                Creacion=datetime.now(),
+                Reserva=datetime.today() - timedelta(minutes=15)),
+
+            Reservas(
+                Nombre='Isabel Lozano',
+                Telefono='689-34545',
                 Creacion=datetime.now(),
                 Reserva=datetime.today() + timedelta(minutes=15)),
 
@@ -128,10 +136,11 @@ class Reservas(sqla.Model):
         reservas = Reservas.__default_reservas__()
 
         # reservas = Reservas.__generate_reservas__(
-        #     datetime(2017,10,29),
-        #     datetime(2017,11,2),
-        #     timedelta(minutes=1)
+        #     datetime.today() - timedelta(days=1),
+        #     datetime.today() + timedelta(days=1),
+        #     timedelta(minutes=15)
         # )
+
         # reservas = Reservas.__generate_reservas__(
         #     datetime(2017,10,31),
         #     datetime(2017,11,1),

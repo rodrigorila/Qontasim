@@ -19,10 +19,12 @@
             Reservas
         </span>
     </div>
-    <div id="table_container" class="container">
+    <div id="table_container">
     </div>
-    <div class="container">
-        <a href="/new_reservation" class="btn btn-primary btn-lg">Nueva</a>
+    <div class="reservation-new-button">
+        <a href="/new_reservation" class="btn btn-warning" style="font-size: 8vw;">
+            <span class="glyphicon glyphicon glyphicon-plus-sign"></span>
+        </a>
     </div>
 {% endblock %}
 
@@ -33,6 +35,43 @@
     <script src="{{ url_for('static', filename='reservation.js') }}"></script>
     <script>
         var table_loaded = false;
+
+        function html_state_on_hold(){
+            return '\
+                <div class="reservation-state"> \
+                    <svg viewBox = "0 0 100 100"> \
+                        <circle class="holding" transform="translate(50 50)" r="40"/> \
+                            <text dy=".3em" transform="translate(50 50)"> \
+                                En espera \
+                            </text> \
+                    </svg> \
+                </div> \
+            ';
+        };
+        function html_state_expired(time){
+            return '\
+                <div class="reservation-state">\
+                    <svg viewBox = "0 0 100 100">\
+                        <rect class="underdue" transform="translate(50 50) rotate(-45)" x="-60" y="-13" rx="10" ry="10" width="120" height="26" />\
+                        <text dy=".3em" transform="translate(50 50) rotate(-45)">\
+                            '+time+'\
+                        </text>\
+                    </svg>\
+                </div>\
+            ';
+        };
+        function html_state_valid(time){
+            return '\
+                <div class="reservation-state">\
+                    <svg viewBox = "0 0 100 100">\
+                        <rect class="overdue" transform="translate(50 50)" x="-50" y="-13" rx="10" ry="10" width="100" height="26" />\
+                        <text dy=".3em" transform="translate(50 50)">\
+                            '+time+'\
+                        </text>\
+                    </svg>\
+                </div>\
+            ';
+        };
 
         function hide_reservation(id, color){
             var my_rows = $("tr[tag='tag_info_row_{0}']".format(id));
@@ -49,7 +88,7 @@
                 },
                 function(data, status){
                     if (status == "success")
-                        hide_reservation(data, "green");
+                        hide_reservation(data, "LightGreen");
                 });
             });
 
@@ -60,12 +99,12 @@
                 },
                 function(data, status){
                     if (status == "success")
-                        hide_reservation(data, "red");
+                        hide_reservation(data, "LightCoral");
                 });
             });
         };
 
-        function review_reservations_waiting_message(){
+        function review_reservations_status(){
             //var numOfVisibleRows = $('tr').filter(function() {
             //    return $(this).css('display') !== 'none';
             //}).length;
@@ -76,13 +115,29 @@
             //console.log(algo.length);
 
             $("td[tag='tag_status']").each(function(){
-                var reservation = $(this).attr('reservation_date');
+                var r = $(this).attr('reservation_date');
 
-                var r = new Reservation(new Date(reservation));
+                var rs = new reservation_status(new Date(r), 15);
 
-                var lapse = r.get_lapse();
+                var l = rs.get_lapse();
 
-                $(this).html(r.get_status(lapse));
+                var s = rs.get_status(l);
+
+                switch(s.status) {
+                    case "on-hold":
+                        $(this).html(html_state_on_hold());
+                        break;
+                    case "valid":
+                        $(this).html(html_state_valid(s.time));
+                        break;
+                    case "expired":
+                        $(this).html(html_state_expired(s.time));
+                        break;
+                    default:
+                        console.log("Unknown status {0}".format(s.status));
+                        break;
+                };
+                //$(this).html(r.get_status(lapse));
             });
         };
 
@@ -92,14 +147,15 @@
             table_loaded =false;
 
             $.post("get_reservations", {
-                filter: "today",
+                <!--filter: "today",-->
+                filter: "all",
                 auto_hide: false
             },
             function(data, status){
                 if (status == "success") {
                     $("#table_container").html(data);
                     attach_actions_to_table_controls();
-                    review_reservations_waiting_message();
+                    review_reservations_status();
                     table_loaded = true;
                 }
             });
@@ -113,7 +169,7 @@
                 if (!table_loaded)
                     return;
 
-                review_reservations_waiting_message();
+                review_reservations_status();
             }, 1000);
         });
     </script>

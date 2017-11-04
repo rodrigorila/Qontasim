@@ -40,9 +40,9 @@
                 <button type="button" class="btn btn-xs" tag="DateChange" action_parameter="Decrement">-</button>
             </div>
             <div class="form-group">
-                <label for="Hora">Hora:</label>
-                <input type="time" class="form-control" id="Hora" name="Hora" list="HorasDisponibles" required />
-                <datalist id="HorasDisponibles">
+                <label for="inpTime">Hora:</label>
+                <input type="time" class="form-control" id="inpTime" name="Hora" list="available_hours_datalist" required />
+                <datalist id="available_hours_datalist">
                     <option value="9:00 am">
                     <option value="10:00 am">
                     <option value="11:00 am">
@@ -61,14 +61,16 @@
                     <option value="12:00 am">
                     <option value="01:00 am">
                 </datalist>
+                <button type="button" class="btn btn-xs" tag="TimeChange" action_parameter="Increment">+</button>
+                <button type="button" class="btn btn-xs" tag="TimeChange" action_parameter="Decrement">-</button>
             </div>
             <div class="form-group">
                 <label for="Personas">Personas:</label>
                 <input type="number" min=1 value=1 class="form-control" id="Personas" name="Personas" required />
             </div>
-            <div class="container">
-                <button type="submit" class="btn btn-primary btn-lg">Aceptar</button>
-                <a href="/" class="btn btn-primary btn-lg">Cancelar</a>
+            <div class="container" align="right">
+                <button type="submit" class="btn btn-primary btn-lg" style="font-size: 5vw;">Aceptar</button>
+                <a href="/" class="btn btn-primary btn-lg" style="font-size: 5vw;">Cancelar</a>
             </div>
         </form>
     </div>
@@ -103,6 +105,25 @@
                         break;
                     case "Decrement":
                         var sd = offset_date_as_string(p.val(), -1);
+                        if (!(sd === undefined))
+                            p.val(sd);
+                        break;
+                };
+            });
+
+            $("button[tag='TimeChange']").click(function(){
+                var a = $(this).attr("action_parameter");
+                var p = $("#inpTime");
+                var v = p.val() == "" ? "19:00:00" : p.val();
+
+                switch(a) {
+                    case "Increment":
+                        var si = offset_time_as_string(v, +1);
+                        if (!(si === undefined))
+                            p.val(si);
+                        break;
+                    case "Decrement":
+                        var sd = offset_time_as_string(v, -1);
                         if (!(sd === undefined))
                             p.val(sd);
                         break;

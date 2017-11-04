@@ -1,27 +1,34 @@
-<table id="table_reservations" class="table table-responsive table-condensed">
+<table id="table_reservations" class="table table-responsive table-bordered reservation-table">
     <tbody>
     {% for reserva in Reservas %}
         <tr tag="tag_info_row_{{ reserva.ID }}">
-            <td class="text-left" colspan="2"><h1>{{ reserva.Nombre }}</h1></td>
-            <td tag = "tag_status" reservation_date = "{{ reserva.Reserva }}" class="text-center" rowspan="2" style="vertical-align: middle;">
-
+            <td class="bottom-border-only large-text" colspan="2">
+                {{ reserva.Nombre }}
             </td>
-            <td class="text-center" rowspan="2" style="vertical-align: middle;">
-                <a tag="tag_enter" reservation_id="{{ reserva.ID }}" style="cursor:pointer">
-                    <h1><span class="glyphicon glyphicon-ok-circle"></span></h1>
+            <td tag = "tag_status"
+                reservation_date = "{{ reserva.Reserva }}"
+                class="text-center bottom-border-only"
+                rowspan="2">
+            </td>
+            <td class="text-center bottom-border-only" rowspan="2">
+                <a tag="tag_enter" reservation_id="{{ reserva.ID }}">
+                    <span class="glyphicon glyphicon-ok-circle"></span>
                 </a>
             </td>
-            <td class="text-center" style="vertical-align: middle;" rowspan="2">
-                <a tag="tag_cancel" reservation_id="{{ reserva.ID }}" style="cursor:pointer">
-                    <h1><span class="glyphicon glyphicon-remove-circle"></span></h1>
+            <td class="text-center bottom-border-only" rowspan="2">
+                <a tag="tag_cancel" reservation_id="{{ reserva.ID }}">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
                 </a>
             </td>
         </tr>
         <tr tag="tag_info_row_{{ reserva.ID }}">
-            <td class="text-center small">{{ reserva.Telefono }}</td>
-            <td tag="tag_date" class="text-center small">{{ reserva.Reserva }}</td>
+            <td class="text-center small">
+                {{ reserva.Telefono }}
+            </td>
+            <td tag="tag_date" class="text-center small">
+                {{ reserva.Reserva }}
+            </td>
         </tr>
     {% endfor %}
-
     </tbody>
 </table>

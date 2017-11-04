@@ -38,6 +38,22 @@ function offset_date_as_string(date_string, days_offset){
     return d.toDateString();
 };
 
+function offset_time_as_string(time_string, hours_offset){
+
+    var date_time_string = new Date('1970-01-01T' + time_string + 'Z');
+
+    var ms = Date.parse(date_time_string);
+
+    if (isNaN(ms))
+        return; // returns undefined!
+
+    var d = new Date(ms);
+
+    d.setHours(d.getHours() + hours_offset);
+
+    return d.toTimeString();
+};
+
 function is_valid_date(date_string){
     var ms = Date.parse(date_string);
     return !isNaN(ms)

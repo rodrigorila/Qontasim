@@ -1,32 +1,47 @@
+function reservation_info(status, time) {
+    this.status = status;
+    this.time = time;
+};
 
-function Reservation(date){
+function reservation_status(date, reservation_tolerance_minutes){
 
-    function overdue_text(days, hours, minutes) {
-
-        if (days == 1)
-            return "Vencida Ayer".format(days);
-
-        if (days > 0)
-            return "Vencida {0} días".format(days);
-
-        if (hours == 1)
-            return "Vencida {0} hora".format(hours);
-
-        if (hours > 0)
-            return "Vencida {0} horas".format(hours);
-
-        if (minutes < 15)
-            return "En espera";
-
-        return "Vencida {0} minutos".format(minutes);
+    function expired(time){
+        return new reservation_info("expired", time);
     }
 
-    function waiting_text(days, hours, minutes, seconds) {
+    function valid(time){
+        return new reservation_info("valid", time);
+    }
+
+    function on_hold(){
+        return new reservation_info("on-hold");
+    }
+
+    function expired_status(days, hours, minutes) {
         if (days == 1)
-            return "Mañana";
+            return expired("Ayer".format(days));
+
+        if (days > 0)
+            return expired("{0} días".format(days));
+
+        if (hours == 1)
+            return expired("{0} hora".format(hours));
+
+        if (hours > 0)
+            return expired("{0} hrs".format(hours));
+
+        if (minutes <= reservation_tolerance_minutes)
+            return new on_hold();
+
+        return expired("{0} min".format(minutes));
+    }
+
+    function valid_status(days, hours, minutes, seconds) {
+        if (days == 1)
+            return valid("Mañana");
 
         if (days > 1)
-            return "{0} días".format(days);
+            return valid("{0} días".format(days));
 
         if (seconds > 0)
             minutes += 1;
@@ -35,15 +50,15 @@ function Reservation(date){
             hours += 1;
 
         if (hours == 1)
-            return "{0} hora".format(hours);
+            return valid("{0} hora".format(hours));
 
         if (hours > 1)
-            return "{0} horas".format(hours);
+            return valid("{0} hrs".format(hours));
 
-        if (minutes < 15)
-            return "En espera";
+        if (minutes <= reservation_tolerance_minutes)
+            return new on_hold();
 
-        return "{0} minutos".format(minutes);
+        return valid("{0} min".format(minutes));
     }
 
     function get_lapse_between(initial, final) {
@@ -74,8 +89,8 @@ function Reservation(date){
 
     this.get_status = function(lapse){
         if (lapse.milliseconds < 0)
-            return overdue_text(lapse.days, lapse.hours, lapse.minutes);
+            return expired_status(lapse.days, lapse.hours, lapse.minutes);
         else
-            return waiting_text(lapse.days, lapse.hours, lapse.minutes, lapse.seconds);
+            return valid_status(lapse.days, lapse.hours, lapse.minutes, lapse.seconds);
     }
 }

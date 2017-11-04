@@ -1,7 +1,38 @@
-.lista-middle-cell {
-    display: table-cell;
-    vertical-align: middle;
+.table td{
+    border: white solid 0px !important;
 }
+
+.table td.bottom-border-only{
+    border-top: Gainsboro solid 2px !important;
+}
+
+.table td.large-text{
+    font-size: 6vw;
+}
+
+.reservation-table {
+}
+
+.reservation-table td {
+    vertical-align: middle;
+    border: none;
+}
+
+.reservation-table a{
+    font-size: 5vw;
+    cursor:pointer;
+    color: black;
+}
+
+.reservation-new-button {
+    cursor:pointer;
+    position:fixed;
+    padding: 0vw;
+    right:0;
+    bottom:0;
+}
+
+/* RESERVATIONS HEADING */
 
 .reservations-heading {
     background-color: black;
@@ -27,4 +58,45 @@
     font-size: 7vw;
     text-align: center;
     color: white;
+}
+
+/* RESERVATIONS STATE SVG */
+
+.reservation-state {
+	width: 8vw;
+	height: 8vw;
+	font: bold 80% sans-serif;
+	text-shadow: 0 1px 2px rgba(0,0,0,.5);
+	overflow: hidden;
+    resize: both;
+	color: white;
+}
+
+.reservation-state svg {
+	width: 100%; height: 100%;
+	pointer-events: none;
+}
+
+.reservation-state circle.holding {
+    fill:green;
+    stroke-width:0;
+    opacity:0.5;
+}
+
+.reservation-state text {
+	text-anchor: middle;
+	pointer-events: auto;
+	fill: currentColor;
+}
+
+.reservation-state rect.overdue {
+    fill:grey;
+    stroke-width:0;
+    opacity:0.5;
+}
+
+.reservation-state rect.underdue {
+    fill:red;
+    stroke-width:0;
+    opacity:0.6;
 }
