@@ -1,5 +1,9 @@
+/* MODIFICATIONS TO TABLE FOR RESERVATIONS*/
+
 .table td{
-    border: white solid 0px !important;
+    padding: 1vw 0 0 1vw !important;
+    vertical-align: middle !important;
+    border: none !important;
 }
 
 .table td.bottom-border-only{
@@ -10,19 +14,18 @@
     font-size: 6vw;
 }
 
-.reservation-table {
+.table td.tiny-text{
+    font-size: 2vw;
+    color: gray;
 }
 
-.reservation-table td {
-    vertical-align: middle;
-    border: none;
-}
-
-.reservation-table a{
+.table a{
     font-size: 5vw;
     cursor:pointer;
     color: black;
 }
+
+/* RESERVATIONS - NEW BUTTON */
 
 .reservation-new-button {
     cursor:pointer;
@@ -32,33 +35,56 @@
     bottom:0;
 }
 
-/* RESERVATIONS HEADING */
+/* RESERVATIONS - HEADING */
 
 .reservations-heading {
-    background-color: black;
-    width:100%;
+  display: flex;
+  flex-direction: row;
+  background: black;
+  color: white;
 }
 
-.reservations-heading-image-container {
-    block: inline;
-    height: 10vw;
+.reservations-heading div.image-container {
+  background: black;
+  color: black;
+  flex-basis: 15vw;
+    margin: auto;
 }
 
-.reservations-heading-image {
-    display: inline;
-    margin-left: auto;
-    margin-right: auto;
-    height: 10vw;
+.reservations-heading img.smallimage {
+    margin: auto;
+	display: block;
+    padding: auto;
+    max-height: 10vw;
 }
 
-.reservations-heading-text-container {
-    display: inline;
-    padding-left: 10vw;
-    vertical-align: middle;
-    font-size: 7vw;
-    text-align: center;
-    color: white;
+.reservations-heading div.title {
+  padding-top: 3vw;
+  padding-left: 15vw;
+  font-size: 5vw;
+
+  flex-basis: 60vw;
 }
+
+
+.reservations-heading-Info {
+  display: flex;
+  flex-direction: column;
+
+  flex-basis: 25vw;
+}
+
+.reservations-heading-Info div.date {
+  font-size: 2vw;
+  text-align: center;
+  height: 8vw;
+}
+
+.reservations-heading-Info div.time {
+  font-size: 4vw;
+  text-align: center;
+}
+
 
 /* RESERVATIONS STATE SVG */
 

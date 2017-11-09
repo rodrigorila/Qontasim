@@ -16,6 +16,12 @@ class Reservas(sqla.Model):
     Reserva = sqla.Column(sqla.DateTime, nullable=False, default=datetime.now())
     Estado = sqla.Column(sqla.String(10), nullable=False, default="pendiente")
 
+
+    @property
+    def Algo(self):
+        return "hola wistupikus"
+
+
     def __repr__(self):
         return '<Reserva {0} de {1} para {2} personas en fecha {3}>'.format(self.ID, self.Nombre, self.NroPersonas, self.Reserva)
 
@@ -26,7 +32,9 @@ class Reservas(sqla.Model):
 
     @staticmethod
     def add(nombre, telefono, fecha, hora):
-        reserva = Reservas(Nombre=nombre, Telefono=telefono, Creacion=datetime.now(),
+        reserva = Reservas(Nombre=nombre,
+                           Telefono=telefono,
+                           Creacion=datetime.now(),
                            Reserva=Reservas.__reserva_de_fecha_hora__(fecha, hora))
         sqla.session.add(reserva)
         sqla.session.commit()
@@ -90,8 +98,8 @@ class Reservas(sqla.Model):
                 Reserva=datetime.today() + timedelta(minutes=15)),
 
             Reservas(
-                Nombre='Isabel Lozano',
-                Telefono='689-34545',
+                Nombre='Galo Antonio Montero Vellaztos',
+                Telefono='751-33350',
                 Creacion=datetime.now(),
                 Reserva=datetime.today() + timedelta(minutes=30)),
 

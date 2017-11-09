@@ -1,7 +1,8 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}Lista de reservas{% endblock %}
 
-{% block navbar %}
+{% block html_attribs %}
+    lang="en"
 {% endblock %}
 
 {% block styles %}
@@ -12,14 +13,25 @@
 
 {% block content %}
     <div class="reservations-heading">
-        <span class="reservations-heading-image-container">
-            <img class="reservations-heading-image" src="static\LogoSacha.png">
-        </span>
-        <span class="reservations-heading-text-container">
-            Reservas
-        </span>
-    </div>
-    <div id="table_container">
+	  <div class="image-container">
+	    <img class="smallimage" src="https://www.bestbuddies.org/wp-content/uploads/2017/07/2017-BBIA-Chef-Challenge-Event-Image-Display-300x300.png">
+	  </div>
+	  <div class="title">
+	    Reservas
+	  </div>
+	  <div class="reservations-heading-Info">
+	    <div class="date">
+            <span id="txt_current_day"></span></br>
+            <span id="txt_current_month"></span></br>
+            <!--<span id="txt_current_year"></span>-->
+	    </div>
+	    <div id="txt_current_time" class="time">
+	    </div>
+	  </div>
+	</div>
+    <div class="reservations-table-wrapper">
+        <div id="table_container" class="reservations-table-container">
+        </div>
     </div>
     <div class="reservation-new-button">
         <a href="/new_reservation" class="btn btn-warning" style="font-size: 8vw;">
@@ -41,7 +53,7 @@
                 <div class="reservation-state"> \
                     <svg viewBox = "0 0 100 100"> \
                         <circle class="holding" transform="translate(50 50)" r="40"/> \
-                            <text dy=".3em" transform="translate(50 50)"> \
+                            <text dy=".5em" transform="translate(50 50)"> \
                                 En espera \
                             </text> \
                     </svg> \
@@ -53,7 +65,7 @@
                 <div class="reservation-state">\
                     <svg viewBox = "0 0 100 100">\
                         <rect class="underdue" transform="translate(50 50) rotate(-45)" x="-60" y="-13" rx="10" ry="10" width="120" height="26" />\
-                        <text dy=".3em" transform="translate(50 50) rotate(-45)">\
+                        <text dy=".5em" transform="translate(50 50) rotate(-45)">\
                             '+time+'\
                         </text>\
                     </svg>\
@@ -65,7 +77,7 @@
                 <div class="reservation-state">\
                     <svg viewBox = "0 0 100 100">\
                         <rect class="overdue" transform="translate(50 50)" x="-50" y="-13" rx="10" ry="10" width="100" height="26" />\
-                        <text dy=".3em" transform="translate(50 50)">\
+                        <text dy=".5em" transform="translate(50 50)">\
                             '+time+'\
                         </text>\
                     </svg>\
@@ -161,16 +173,28 @@
             });
         };
 
+        function update_date_time(){
+            var ds = new datetime_strings();
+            //$("#txt_current_year").html(ds.year);
+            $("#txt_current_day").html(ds.day);
+            $("#txt_current_month").html(ds.month);
+            $("#txt_current_time").html(ds.time);
+        };
+
         $(document).ready(function(){
+            update_date_time();
 
             collect_reservations_table();
 
             var reservation_status_timer = setInterval(function() {
+                update_date_time();
+
                 if (!table_loaded)
                     return;
 
                 review_reservations_status();
-            }, 1000);
+            },
+            5 * 1000); // every FIVE seconds! (in JavaScript is not exact, no threading)
         });
     </script>
 {% endblock %}
