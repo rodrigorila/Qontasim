@@ -1,15 +1,4 @@
-{% extends "bootstrap/base.html" %}
-{% block title %}Lista de reservas{% endblock %}
-
-{% block html_attribs %}
-    lang="en"
-{% endblock %}
-
-{% block styles %}
-    {{super()}}
-    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/reservations.css')}}">
-    <!--<link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">-->
-{% endblock %}
+{% extends "base_page.html" %}
 
 {% block content %}
     <div class="reservations-heading">
@@ -42,8 +31,6 @@
 
 {% block scripts %}
     {{super()}}
-
-    <script src="{{ url_for('static', filename='base.js') }}"></script>
     <script src="{{ url_for('static', filename='reservation.js') }}"></script>
     <script>
         var table_loaded = false;

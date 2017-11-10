@@ -1,0 +1,25 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+    Quontasim
+{% endblock %}
+
+{% block html_attribs %}
+    {{super()}}
+    lang="es"
+{% endblock %}
+
+{% block metas %}
+    {{super()}}
+    <meta charset="UTF-8">
+{% endblock %}
+
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/base_styles.css')}}">
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    <script src="{{ url_for('static', filename='base_script.js') }}"></script>
+{% endblock %}

@@ -17,6 +17,11 @@ function toInt(n){
     return Math.round(Number(n));
 };
 
+function is_valid_date(date_string){
+    var ms = Date.parse(date_string);
+    return !isNaN(ms)
+};
+
 function offset_date_from_today_as_string(days_from_today){
     var d = new Date();
 
@@ -98,10 +103,5 @@ function datetime_strings(){
 
         return; //returns undefined
     }
-}
-
-function is_valid_date(date_string){
-    var ms = Date.parse(date_string);
-    return !isNaN(ms)
 };
 

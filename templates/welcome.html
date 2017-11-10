@@ -1,22 +1,16 @@
-<!doctype html>
+{% extends "base_page.html" %}
 
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-
-        <!--<link href="{{ url_for('static', filename='favicon.png') }}" rel="shortcut icon" type="image/x-icon" />-->
-    </head>
-
-    <body onload="OnLoaded()">
+{% block content %}
     <p>
-        Q'ontasim ...
+        Cargando...
     </p>
-    </body>
+{% endblock %}
 
+{% block scripts %}
+    {{super()}}
     <script>
-        function OnLoaded() {
+        $(function(){
             window.location.href = "/show_reservations";
-        }
+        });
     </script>
-
-</html>
+{% endblock %}

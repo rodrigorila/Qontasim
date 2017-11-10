@@ -39,11 +39,11 @@ def initialize():
 
     Reservas.init_app(app)
 
-@app.route("/counter", methods=['GET'])
-def counter():
-    return render_template("counter.html")
-
-
+# This method renders a page that helps validate the Reservation (reservation.js) object
+# @app.route("/counter", methods=['GET'])
+# def counter():
+#     return render_template("counter.html")
+ 
 @app.route("/new_reservation", methods=['GET'])
 def nueva():
     return render_template('new_reservation.html')

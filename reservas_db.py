@@ -25,17 +25,31 @@ class Reservas(sqla.Model):
     def __repr__(self):
         return '<Reserva {0} de {1} para {2} personas en fecha {3}>'.format(self.ID, self.Nombre, self.NroPersonas, self.Reserva)
 
-    @staticmethod
-    def __reserva_de_fecha_hora__(fecha, hora):
-        # datetime.date.today() + datetime.timedelta(days=1)
-        return datetime.now()
 
     @staticmethod
     def add(nombre, telefono, fecha, hora):
+        def datetime_from(fecha, hora):
+            # datetime.date.today() + datetime.timedelta(days=1)
+            return datetime.now()
+
+        nombre = str(nombre).strim()
+        if not nombre:
+            raise Exception(u"El campo nombre no puede estar vacío")
+
+        telefono = str(telefono).strim()
+        fecha = str(fecha).strim()
+        hora = str(hora).strim()
+
+        if not fecha:
+            raise Exception(u"El campo fecha no puede estar vacío")
+
+        if not hora:
+            raise Exception(u"El campo hora no puede estar vacío")
+
         reserva = Reservas(Nombre=nombre,
                            Telefono=telefono,
                            Creacion=datetime.now(),
-                           Reserva=Reservas.__reserva_de_fecha_hora__(fecha, hora))
+                           Reserva=datetime_from(fecha, hora))
         sqla.session.add(reserva)
         sqla.session.commit()
 
