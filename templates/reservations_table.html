@@ -1,6 +1,7 @@
 <table id="table_reservations" class="table table-responsive table-bordered">
     <tbody>
     {% for reserva in Reservas %}
+        <div>
         <tr tag="tag_info_row_{{ reserva.ID }}">
             <td class="bottom-border-only large-text" colspan="2">
                 {{ reserva.Nombre }}
@@ -12,12 +13,12 @@
             </td>
             <td class="text-center bottom-border-only" rowspan="2">
                 <a tag="tag_enter" reservation_id="{{ reserva.ID }}">
-                    <span style="padding-left: 1vw;" class="glyphicon glyphicon-ok-circle"></span>
+                    <span style="padding-left: 3vw;" class="glyphicon glyphicon-ok-circle"></span>
                 </a>
             </td>
             <td class="text-center bottom-border-only" rowspan="2">
                 <a tag="tag_cancel" reservation_id="{{ reserva.ID }}">
-                    <span style="padding-left: 1vw;" class="glyphicon glyphicon-remove-circle"></span>
+                    <span style="padding-left: 3vw;" class="glyphicon glyphicon-remove-circle"></span>
                 </a>
             </td>
             <td class="text-center bottom-border-only" rowspan="2">
@@ -31,9 +32,10 @@
                 {{ reserva.Telefono }}
             </td>
             <td tag="tag_date" class="text-center tiny-text">
-                {{ reserva.Algo }}
+                {{ reserva.Fecha }} ({{ reserva.Hora }})
             </td>
         </tr>
+        </div>
     {% endfor %}
     </tbody>
 </table>

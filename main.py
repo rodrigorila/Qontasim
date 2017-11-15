@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, url_for, redirect, make_respo
 from flask_bootstrap import Bootstrap
 from reservas_db import Reservas
 
+
 # App config.
 # DEBUG = True
 app = Flask(__name__)
@@ -26,8 +27,8 @@ def initialize():
         import flask_bootstrap
 
         ValidateVersion("Flask", "0.12.2", flask.__version__)
-        ValidateVersion("SQLAlchemy", "1.1.14", sqlalchemy.__version__)
-        ValidateVersion("Flask-SQLAlchemy", "2.3.1", flask_sqlalchemy.__version__)
+        ValidateVersion("SQLAlchemy", "1.1.15", sqlalchemy.__version__)
+        ValidateVersion("Flask-SQLAlchemy", "2.3.2", flask_sqlalchemy.__version__)
         ValidateVersion("Flask-Bootstrap", "3.3.7.1.dev1", flask_bootstrap.__version__)
 
         print("Flask: {0}".format(flask.__version__))
@@ -44,22 +45,51 @@ def initialize():
 # def counter():
 #     return render_template("counter.html")
  
-@app.route("/new_reservation", methods=['GET'])
-def nueva():
-    return render_template('new_reservation.html')
-
-
-@app.route("/add_reservation", methods=['POST'])
-def agregar():
+@app.route("/update_reservation", methods=['POST'])
+def update_reservation():
     nombre = request.form.get('Nombre', None)
     telefono = request.form.get('Telefono', None)
     fecha = request.form.get('Fecha', None)
     hora = request.form.get('Hora', None)
+    notes = request.form.get('Notas', None)
 
-    Reservas.add(nombre, telefono, fecha, hora)
+    if request.form.action is "add":
+        Reservas.update_reservation(nombre, telefono, fecha, hora, notes)
 
-    return redirect("/")
+    if request.form.action is "edit":
+        id = request.form.get('ID', None)
+        Reservas.update_reservation(nombre, telefono, fecha, hora, notes, id)
 
+    return make_response ("updated", 200)
+
+@app.route("/add_reservation", methods=['GET'])
+def add_reservation():
+    return render_template("reservation.html", action="add")
+
+@app.route("/edit_reservation", methods=['POST'])
+def edit_reservation():
+    id = request.form.get('id', None)
+
+    if not id:
+        raise Exception('No es posible editar la reserva')
+
+    r = Reservas.get(id)
+
+    if not r:
+        raise Exception('La reserva "{0}" no existe'.format(id))
+
+    # REDIRECT VS RENDER_TEMPLATE
+    # (https://stackoverflow.com/questions/21668481/difference-between-render-template-and-redirect)
+    #
+    # return redirect(url_for('index', var=var))
+    # return render_template('index.html', var=var)
+    #
+    # redirect returns a 302 header to the browser, with
+    # its Location header as the URL for the index function.
+    # render_template returns a 200, with the index.html
+    # template returned as the content at that URL.
+
+    return render_template("reservation.html", action="edit", reservation=r)
 
 @app.route("/get_reservations", methods=['POST'])
 def get_reservations():

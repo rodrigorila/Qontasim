@@ -15,74 +15,20 @@ class Reservas(sqla.Model):
     NroPersonas = sqla.Column(sqla.Integer, nullable=False, default=1)
     Reserva = sqla.Column(sqla.DateTime, nullable=False, default=datetime.now())
     Estado = sqla.Column(sqla.String(10), nullable=False, default="pendiente")
-
+    Notes = sqla.Column(sqla.String(2048), nullable=True)
 
     @property
-    def Algo(self):
-        return "hola wistupikus"
+    def Hora(self):
+        r = self.Reserva
+        return r.strftime("%H:%M")
 
+    @property
+    def Fecha(self):
+        r = self.Reserva
+        return "{0} {1}, {2}".format(r.strftime("%A"), r.day, r.strftime("%B"))
 
     def __repr__(self):
         return '<Reserva {0} de {1} para {2} personas en fecha {3}>'.format(self.ID, self.Nombre, self.NroPersonas, self.Reserva)
-
-
-    @staticmethod
-    def add(nombre, telefono, fecha, hora):
-        def datetime_from(fecha, hora):
-            # datetime.date.today() + datetime.timedelta(days=1)
-            return datetime.now()
-
-        nombre = str(nombre).strim()
-        if not nombre:
-            raise Exception(u"El campo nombre no puede estar vacío")
-
-        telefono = str(telefono).strim()
-        fecha = str(fecha).strim()
-        hora = str(hora).strim()
-
-        if not fecha:
-            raise Exception(u"El campo fecha no puede estar vacío")
-
-        if not hora:
-            raise Exception(u"El campo hora no puede estar vacío")
-
-        reserva = Reservas(Nombre=nombre,
-                           Telefono=telefono,
-                           Creacion=datetime.now(),
-                           Reserva=datetime_from(fecha, hora))
-        sqla.session.add(reserva)
-        sqla.session.commit()
-
-    @staticmethod
-    def query_days_from_now(days):
-        return Reservas.query.filter(
-            and_(
-                Reservas.Reserva >= date.today() + timedelta(days=days),
-                Reservas.Reserva < date.today() + timedelta(days=days+1)
-            )).order_by(Reservas.Reserva).all()
-
-    @staticmethod
-    def query_all():
-        return Reservas.query.order_by(asc(Reservas.Reserva)).all()
-
-    @staticmethod
-    def enter(id):
-        r = Reservas.query.get(id)
-        r.Estado = "ingresada"
-        sqla.session.commit()
-
-    @staticmethod
-    def cancel(id):
-        r = Reservas.query.get(id)
-        r.Estado = "cancelada"
-        sqla.session.commit()
-
-    @staticmethod
-    def range_dates(from_date, to_date, delta):
-        d = from_date
-        while d <= to_date:
-            yield d
-            d = d + delta
 
     @staticmethod
     def __default_reservas__():
@@ -147,6 +93,74 @@ class Reservas(sqla.Model):
                     Reserva = d)
             )
         return list
+
+    @staticmethod
+    def update_reservation(nombre, telefono, fecha, hora, notes, id):
+        def datetime_from(fecha, hora):
+            # datetime.date.today() + datetime.timedelta(days=1)
+            return datetime.now()
+
+        nombre = str(nombre).strim()
+        if not nombre:
+            raise Exception(u"El campo nombre no puede estar vacío")
+
+        telefono = str(telefono).strim()
+        fecha = str(fecha).strim()
+        hora = str(hora).strim()
+
+        if not fecha:
+            raise Exception(u"El campo fecha no puede estar vacío")
+
+        if not hora:
+            raise Exception(u"El campo hora no puede estar vacío")
+
+        if id:
+            reserva = Reservas.query.get(id)
+            reserva.Nombre = nombre
+            reserva.Telefono = telefono
+            reserva.Reserva = datetime_from(fecha, hora)
+            reserva.Notas = notes
+        else:
+            reserva = Reservas(Nombre=nombre,
+                               Telefono=telefono,
+                               Creacion=datetime.now(),
+                               Reserva=datetime_from(fecha, hora),
+                               Notas=notes)
+            sqla.session.add(reserva)
+
+
+        sqla.session.commit()
+
+    @staticmethod
+    def query_days_from_now(days):
+        return Reservas.query.filter(
+            and_(
+                Reservas.Reserva >= date.today() + timedelta(days=days),
+                Reservas.Reserva < date.today() + timedelta(days=days+1)
+            )).order_by(Reservas.Reserva).all()
+
+    @staticmethod
+    def query_all():
+        return Reservas.query.order_by(asc(Reservas.Reserva)).all()
+
+    @staticmethod
+    def enter(id):
+        r = Reservas.query.get(id)
+        r.Estado = "ingresada"
+        sqla.session.commit()
+
+    @staticmethod
+    def cancel(id):
+        r = Reservas.query.get(id)
+        r.Estado = "cancelada"
+        sqla.session.commit()
+
+    @staticmethod
+    def range_dates(from_date, to_date, delta):
+        d = from_date
+        while d <= to_date:
+            yield d
+            d = d + delta
 
     @staticmethod
     def init_app(app):

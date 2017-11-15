@@ -3,7 +3,7 @@
 {% block content %}
     <div class="reservations-heading">
 	  <div class="image-container">
-	    <img class="smallimage" src="https://www.bestbuddies.org/wp-content/uploads/2017/07/2017-BBIA-Chef-Challenge-Event-Image-Display-300x300.png">
+	    <img class="smallimage" src="{{ url_for('static', filename='logo.png') }}">
 	  </div>
 	  <div class="title">
 	    Reservas
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="reservation-new-button">
-        <a href="/new_reservation" class="btn btn-warning" style="font-size: 8vw;">
+        <a href="/add_reservation" class="btn btn-warning" style="font-size: 8vw;">
             <span class="glyphicon glyphicon glyphicon-plus-sign"></span>
         </a>
     </div>
@@ -75,7 +75,17 @@
         function hide_reservation(id, color){
             var my_rows = $("tr[tag='tag_info_row_{0}']".format(id));
             my_rows.css("background-color", color)
-            my_rows.hide(480);
+            //my_rows.hide(480);
+            my_rows.animate({
+              opacity: 0 // animate by reducing the opacity to zero
+              },
+              {
+              duration: 777,
+              easing: "linear",
+              complete: function(){
+                $(this).hide(); // hide when animation is done
+              }
+            });
         };
 
         function attach_actions_to_table_controls(){
@@ -99,6 +109,15 @@
                 function(data, status){
                     if (status == "success")
                         hide_reservation(data, "LightCoral");
+                });
+            });
+
+            $("a[tag='tag_edit']").click(function(){
+                $.post("edit_reservation", {
+                    id: $(this).attr('reservation_id')
+                },
+                function(data, status){
+                    alert("Data: " + data + "\nStatus: " + status);
                 });
             });
         };

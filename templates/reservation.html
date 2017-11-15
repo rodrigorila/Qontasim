@@ -1,16 +1,24 @@
 {% extends "base_page.html" %}
 
 {% block content %}
-    <div class="container">
-        <div class="reservations-heading">
-            <span class="reservations-heading-image-container">
-                <img class="reservations-heading-image" src="static\LogoSacha.png">
-            </span>
-            <span class="reservations-heading-text-container">
-                Nueva reserva
-            </span>
+    <div class="reservations-heading">
+        <div class="image-container">
+            <img class="smallimage" src="{{ url_for('static', filename='logo.png') }}">
         </div>
-        <form class="form-control-static" action="/add_reservation" method="post">
+        <div class="title">
+            Nueva reserva
+        </div>
+        <div class="reservations-heading-Info">
+            <div class="date">
+                <span id="txt_current_day"></span></br>
+                <span id="txt_current_month"></span></br>
+            </div>
+            <div id="txt_current_time" class="time">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <form class="form-control-static" action="/update_reservation" method="post">
             <div class="form-group">
                 <label for="Nombre">Nombre:</label>
                 <input type="text" class="form-control" id="Nombre" name="Nombre" required autofocus />
@@ -60,6 +68,10 @@
             <div class="form-group">
                 <label for="Personas">Personas:</label>
                 <input type="number" min=1 value=1 class="form-control" id="Personas" name="Personas" required />
+            </div>
+            <div class="form-group">
+                <label for="Notas">Notas:</label>
+                <input type="textarea" class="form-control" id="Notas" name="Notas" />
             </div>
             <div class="container" align="right">
                 <button type="submit" class="btn btn-primary btn-lg" style="font-size: 5vw;">Aceptar</button>
@@ -127,6 +139,23 @@
                 }
                 else
                     $(this)[0].setCustomValidity("");
+            });
+
+            function update_date_time(){
+                var ds = new datetime_strings();
+                //$("#txt_current_year").html(ds.year);
+                $("#txt_current_day").html(ds.day);
+                $("#txt_current_month").html(ds.month);
+                $("#txt_current_time").html(ds.time);
+            };
+
+            $(document).ready(function(){
+                update_date_time();
+
+                var reservation_status_timer = setInterval(function() {
+                    update_date_time();
+                },
+                5 * 1000); // every FIVE seconds! (in JavaScript is not exact, no threading)
             });
         });
     </script>
