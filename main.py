@@ -2,13 +2,18 @@ from flask import Flask, render_template, request, url_for, redirect, make_respo
 from flask_bootstrap import Bootstrap
 from reservas_db import Reservas
 
+from configuration import Configuration
+
+config = Configuration('config.xml')
+print('Connection string: {}'.format(config.connection_string))
+
 
 # App config.
 # DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '020ac046-b107-11e7-b478-00e04c534458'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://rod:tt8uyi_ddP9@localhost/Qontasim_SachaDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = config.connection_string
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 

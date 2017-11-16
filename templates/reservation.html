@@ -149,8 +149,14 @@
                 $("#txt_current_time").html(ds.time);
             };
 
+            function retrieve_data() {
+            }
+
             $(document).ready(function(){
                 update_date_time();
+
+                if (action === "edit")
+                    retrieve_data();
 
                 var reservation_status_timer = setInterval(function() {
                     update_date_time();

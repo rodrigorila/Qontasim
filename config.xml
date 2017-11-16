@@ -1,0 +1,5 @@
+<?xml version="1.0" ?><root>
+            <configuration>
+                <connection_string>mysql+pymysql://rod:tt8uyi_ddP9@localhost/Qontasim_SachaDB</connection_string>
+            </configuration>
+        </root>
