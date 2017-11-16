@@ -112,14 +112,14 @@
                 });
             });
 
-            $("a[tag='tag_edit']").click(function(){
-                $.post("edit_reservation", {
-                    id: $(this).attr('reservation_id')
-                },
-                function(data, status){
-                    alert("Data: " + data + "\nStatus: " + status);
-                });
-            });
+            //$("a[tag='tag_edit']").click(function(){
+                //$.post("edit_reservation", {
+                //    id: $(this).attr('reservation_id')
+                //},
+                //function(data, status){
+                //    alert("Data: " + data + "\nStatus: " + status);
+                //});
+            //});
         };
 
         function review_reservations_status(){

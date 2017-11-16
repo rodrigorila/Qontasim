@@ -156,6 +156,10 @@ class Reservas(sqla.Model):
         sqla.session.commit()
 
     @staticmethod
+    def get(id):
+        return Reservas.query.get(id)
+
+    @staticmethod
     def range_dates(from_date, to_date, delta):
         d = from_date
         while d <= to_date:

@@ -69,15 +69,10 @@ def update_reservation():
 
 @app.route("/add_reservation", methods=['GET'])
 def add_reservation():
-    return render_template("reservation.html", action="add")
+    return render_template("reservation.html")
 
-@app.route("/edit_reservation", methods=['POST'])
-def edit_reservation():
-    id = request.form.get('id', None)
-
-    if not id:
-        raise Exception('No es posible editar la reserva')
-
+@app.route("/edit_reservation/<id>", methods=['GET'])
+def edit_reservation(id):
     r = Reservas.get(id)
 
     if not r:
@@ -94,7 +89,7 @@ def edit_reservation():
     # render_template returns a 200, with the index.html
     # template returned as the content at that URL.
 
-    return render_template("reservation.html", action="edit", reservation=r)
+    return render_template("reservation.html", reservation=r)
 
 @app.route("/get_reservations", methods=['POST'])
 def get_reservations():
