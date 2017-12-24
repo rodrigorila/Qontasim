@@ -27,7 +27,8 @@ function offset_date_from_today_as_string(days_from_today){
 
     d.setDate(d.getDate() + days_from_today);
 
-    return d.toDateString();
+    // fixed
+    return "{0}".format(d.toDateString());
 };
 
 function offset_date_as_string(date_string, days_offset){
@@ -38,7 +39,7 @@ function offset_date_as_string(date_string, days_offset){
 
     var d = new Date(ms);
 
-    d.setDate(d.getDate() + days_offset);
+    d.setDays(d.getDays() + days_offset);
 
     return d.toDateString();
 };

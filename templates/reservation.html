@@ -19,6 +19,18 @@
     </div>
     <div class="container">
         <form class="form-control-static" action="/update_reservation" method="post">
+            {% if reservation is defined %}
+            <div class="form-group">
+                <label for="ID">ID:</label>
+                <input type="text"
+                       class="form-control"
+                       id="ID"
+                       name="ID"
+                       readonly
+                       value="{{ reservation.ID|e }}"
+                />
+            </div>
+            {% endif %}
             <div class="form-group">
                 <label for="Nombre">Nombre:</label>
                 <input type="text"
@@ -120,85 +132,85 @@
 {% block scripts %}
     {{super()}}
     <script>
-        //short version of: $(document).ready(function(){
-        $(function(){
-            $("button[tag='DateChange']").click(function(){
-                var a = $(this).attr("action_parameter");
-                var p = $("#inpDate");
+    //short version of: $(document).ready(function(){
+    $(function(){
+        $("button[tag='DateChange']").click(function(){
+            var a = $(this).attr("action_parameter");
+            var p = $("#inpDate");
 
-                switch(a) {
-                    case "Today":
-                        p.val(offset_date_from_today_as_string(0));
-                        break;
-                    case "Tomorrow":
-                        p.val(offset_date_from_today_as_string(1));
-                        break;
-                    case "DayAfterTomorrow":
-                        p.val(offset_date_from_today_as_string(2));
-                        break;
-                    case "Increment":
-                        var si = offset_date_as_string(p.val(), +1);
-                        if (!(si === undefined))
-                            p.val(si);
-                        break;
-                    case "Decrement":
-                        var sd = offset_date_as_string(p.val(), -1);
-                        if (!(sd === undefined))
-                            p.val(sd);
-                        break;
-                };
-            });
-
-            $("button[tag='TimeChange']").click(function(){
-                var a = $(this).attr("action_parameter");
-                var p = $("#inpTime");
-                var v = p.val() == "" ? "19:00:00" : p.val();
-
-                switch(a) {
-                    case "Increment":
-                        var si = offset_time_as_string(v, +1);
-                        if (!(si === undefined))
-                            p.val(si);
-                        break;
-                    case "Decrement":
-                        var sd = offset_time_as_string(v, -1);
-                        if (!(sd === undefined))
-                            p.val(sd);
-                        break;
-                };
-            });
-
-            $("#inpDate").change(function(){
-                if (!is_valid_date($(this).val())){
-                    $(this)[0].setCustomValidity("{0} no es una fecha válida".format($(this).val()));
-                }
-                else
-                    $(this)[0].setCustomValidity("");
-            });
-
-            function update_date_time(){
-                var ds = new datetime_strings();
-                //$("#txt_current_year").html(ds.year);
-                $("#txt_current_day").html(ds.day);
-                $("#txt_current_month").html(ds.month);
-                $("#txt_current_time").html(ds.time);
+            switch(a) {
+                case "Today":
+                    p.val(offset_date_from_today_as_string(0));
+                    break;
+                case "Tomorrow":
+                    p.val(offset_date_from_today_as_string(1));
+                    break;
+                case "DayAfterTomorrow":
+                    p.val(offset_date_from_today_as_string(2));
+                    break;
+                case "Increment":
+                    var si = offset_date_as_string(p.val(), +1);
+                    if (!(si === undefined))
+                        p.val(si);
+                    break;
+                case "Decrement":
+                    var sd = offset_date_as_string(p.val(), -1);
+                    if (!(sd === undefined))
+                        p.val(sd);
+                    break;
             };
-
-            function retrieve_data() {
-            }
-
-            $(document).ready(function(){
-                update_date_time();
-
-                if (action === "edit")
-                    retrieve_data();
-
-                var reservation_status_timer = setInterval(function() {
-                    update_date_time();
-                },
-                5 * 1000); // every FIVE seconds! (in JavaScript is not exact, no threading)
-            });
         });
+
+        $("button[tag='TimeChange']").click(function(){
+            var a = $(this).attr("action_parameter");
+            var p = $("#inpTime");
+            var v = p.val() == "" ? "19:00:00" : p.val();
+
+            switch(a) {
+                case "Increment":
+                    var si = offset_time_as_string(v, +1);
+                    if (!(si === undefined))
+                        p.val(si);
+                    break;
+                case "Decrement":
+                    var sd = offset_time_as_string(v, -1);
+                    if (!(sd === undefined))
+                        p.val(sd);
+                    break;
+            };
+        });
+
+        $("#inpDate").change(function(){
+            if (!is_valid_date($(this).val())){
+                $(this)[0].setCustomValidity("{0} no es una fecha válida".format($(this).val()));
+            }
+            else
+                $(this)[0].setCustomValidity("");
+        });
+
+        function update_date_time(){
+            var ds = new datetime_strings();
+            //$("#txt_current_year").html(ds.year);
+            $("#txt_current_day").html(ds.day);
+            $("#txt_current_month").html(ds.month);
+            $("#txt_current_time").html(ds.time);
+        };
+
+        function retrieve_data() {
+        }
+
+        $(document).ready(function(){
+            update_date_time();
+
+            if (action === "edit")
+                retrieve_data();
+
+            var reservation_status_timer = setInterval(function() {
+                update_date_time();
+            },
+            5 * 1000); // every FIVE seconds! (in JavaScript is not exact, no threading)
+        });
+    });
     </script>
 {% endblock %}
 

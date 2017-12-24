@@ -31,176 +31,178 @@
 
 {% block scripts %}
     {{super()}}
+
     <script src="{{ url_for('static', filename='reservation.js') }}"></script>
+
     <script>
-        var table_loaded = false;
+    var table_loaded = false;
 
-        function html_state_on_hold(){
-            return '\
-                <div class="reservation-state"> \
-                    <svg viewBox = "0 0 100 100"> \
-                        <circle class="holding" transform="translate(50 50)" r="40"/> \
-                            <text dy=".5em" transform="translate(50 50)"> \
-                                En espera \
-                            </text> \
-                    </svg> \
-                </div> \
-            ';
-        };
-        function html_state_expired(time){
-            return '\
-                <div class="reservation-state">\
-                    <svg viewBox = "0 0 100 100">\
-                        <rect class="underdue" transform="translate(50 50) rotate(-45)" x="-60" y="-13" rx="10" ry="10" width="120" height="26" />\
-                        <text dy=".5em" transform="translate(50 50) rotate(-45)">\
-                            '+time+'\
-                        </text>\
-                    </svg>\
-                </div>\
-            ';
-        };
-        function html_state_valid(time){
-            return '\
-                <div class="reservation-state">\
-                    <svg viewBox = "0 0 100 100">\
-                        <rect class="overdue" transform="translate(50 50)" x="-50" y="-13" rx="10" ry="10" width="100" height="26" />\
-                        <text dy=".5em" transform="translate(50 50)">\
-                            '+time+'\
-                        </text>\
-                    </svg>\
-                </div>\
-            ';
-        };
+    function html_state_on_hold(){
+        return '\
+            <div class="reservation-state"> \
+                <svg viewBox = "0 0 100 100"> \
+                    <circle class="holding" transform="translate(50 50)" r="40"/> \
+                        <text dy=".5em" transform="translate(50 50)"> \
+                            En espera \
+                        </text> \
+                </svg> \
+            </div> \
+        ';
+    };
+    function html_state_expired(time){
+        return '\
+            <div class="reservation-state">\
+                <svg viewBox = "0 0 100 100">\
+                    <rect class="underdue" transform="translate(50 50) rotate(-45)" x="-60" y="-13" rx="10" ry="10" width="120" height="26" />\
+                    <text dy=".5em" transform="translate(50 50) rotate(-45)">\
+                        '+time+'\
+                    </text>\
+                </svg>\
+            </div>\
+        ';
+    };
+    function html_state_valid(time){
+        return '\
+            <div class="reservation-state">\
+                <svg viewBox = "0 0 100 100">\
+                    <rect class="overdue" transform="translate(50 50)" x="-50" y="-13" rx="10" ry="10" width="100" height="26" />\
+                    <text dy=".5em" transform="translate(50 50)">\
+                        '+time+'\
+                    </text>\
+                </svg>\
+            </div>\
+        ';
+    };
 
-        function hide_reservation(id, color){
-            var my_rows = $("tr[tag='tag_info_row_{0}']".format(id));
-            my_rows.css("background-color", color)
-            //my_rows.hide(480);
-            my_rows.animate({
-              opacity: 0 // animate by reducing the opacity to zero
-              },
-              {
-              duration: 777,
-              easing: "linear",
-              complete: function(){
-                $(this).hide(); // hide when animation is done
-              }
-            });
-        };
+    function hide_reservation(id, color){
+        var my_rows = $("tr[tag='tag_info_row_{0}']".format(id));
+        my_rows.css("background-color", color)
+        //my_rows.hide(480);
+        my_rows.animate({
+          opacity: 0 // animate by reducing the opacity to zero
+          },
+          {
+          duration: 777,
+          easing: "linear",
+          complete: function(){
+            $(this).hide(); // hide when animation is done
+          }
+        });
+    };
 
-        function attach_actions_to_table_controls(){
-            $("a[tag='tag_enter']").click(function(){
+    function attach_actions_to_table_controls(){
+        $("a[tag='tag_enter']").click(function(){
 
-                $.post("change_reservation", {
-                    action: "enter",
-                    id: $(this).attr('reservation_id')
-                },
-                function(data, status){
-                    if (status == "success")
-                        hide_reservation(data, "LightGreen");
-                });
-            });
-
-            $("a[tag='tag_cancel']").click(function(){
-                $.post("change_reservation", {
-                    action: "cancel",
-                    id: $(this).attr('reservation_id')
-                },
-                function(data, status){
-                    if (status == "success")
-                        hide_reservation(data, "LightCoral");
-                });
-            });
-
-            //$("a[tag='tag_edit']").click(function(){
-                //$.post("edit_reservation", {
-                //    id: $(this).attr('reservation_id')
-                //},
-                //function(data, status){
-                //    alert("Data: " + data + "\nStatus: " + status);
-                //});
-            //});
-        };
-
-        function review_reservations_status(){
-            //var numOfVisibleRows = $('tr').filter(function() {
-            //    return $(this).css('display') !== 'none';
-            //}).length;
-            //console.log("visible rows: " + numOfVisibleRows);
-
-            //list of all visible rows
-            //var algo = $('tr').filter(':visible');
-            //console.log(algo.length);
-
-            $("td[tag='tag_status']").each(function(){
-                var r = $(this).attr('reservation_date');
-
-                var rs = new reservation_status(new Date(r), 15);
-
-                var l = rs.get_lapse();
-
-                var s = rs.get_status(l);
-
-                switch(s.status) {
-                    case "on-hold":
-                        $(this).html(html_state_on_hold());
-                        break;
-                    case "valid":
-                        $(this).html(html_state_valid(s.time));
-                        break;
-                    case "expired":
-                        $(this).html(html_state_expired(s.time));
-                        break;
-                    default:
-                        console.log("Unknown status {0}".format(s.status));
-                        break;
-                };
-                //$(this).html(r.get_status(lapse));
-            });
-        };
-
-        function collect_reservations_table(){
-
-            $("#table_container").html("<p>Cargando...</p>");
-            table_loaded =false;
-
-            $.post("get_reservations", {
-                <!--filter: "today",-->
-                filter: "all",
-                auto_hide: false
+            $.post("change_reservation", {
+                action: "enter",
+                id: $(this).attr('reservation_id')
             },
             function(data, status){
-                if (status == "success") {
-                    $("#table_container").html(data);
-                    attach_actions_to_table_controls();
-                    review_reservations_status();
-                    table_loaded = true;
-                }
+                if (status == "success")
+                    hide_reservation(data, "LightGreen");
             });
-        };
+        });
 
-        function update_date_time(){
-            var ds = new datetime_strings();
-            //$("#txt_current_year").html(ds.year);
-            $("#txt_current_day").html(ds.day);
-            $("#txt_current_month").html(ds.month);
-            $("#txt_current_time").html(ds.time);
-        };
+        $("a[tag='tag_cancel']").click(function(){
+            $.post("change_reservation", {
+                action: "cancel",
+                id: $(this).attr('reservation_id')
+            },
+            function(data, status){
+                if (status == "success")
+                    hide_reservation(data, "LightCoral");
+            });
+        });
 
-        $(document).ready(function(){
+        //$("a[tag='tag_edit']").click(function(){
+            //$.post("edit_reservation", {
+            //    id: $(this).attr('reservation_id')
+            //},
+            //function(data, status){
+            //    alert("Data: " + data + "\nStatus: " + status);
+            //});
+        //});
+    };
+
+    function review_reservations_status(){
+        //var numOfVisibleRows = $('tr').filter(function() {
+        //    return $(this).css('display') !== 'none';
+        //}).length;
+        //console.log("visible rows: " + numOfVisibleRows);
+
+        //list of all visible rows
+        //var algo = $('tr').filter(':visible');
+        //console.log(algo.length);
+
+        $("td[tag='tag_status']").each(function(){
+            var r = $(this).attr('reservation_date');
+
+            var rs = new reservation_status(new Date(r), 15);
+
+            var l = rs.get_lapse();
+
+            var s = rs.get_status(l);
+
+            switch(s.status) {
+                case "on-hold":
+                    $(this).html(html_state_on_hold());
+                    break;
+                case "valid":
+                    $(this).html(html_state_valid(s.time));
+                    break;
+                case "expired":
+                    $(this).html(html_state_expired(s.time));
+                    break;
+                default:
+                    console.log("Unknown status {0}".format(s.status));
+                    break;
+            };
+            //$(this).html(r.get_status(lapse));
+        });
+    };
+
+    function collect_reservations_table(){
+
+        $("#table_container").html("<p>Cargando...</p>");
+        table_loaded =false;
+
+        $.post("get_reservations", {
+            <!--filter: "today",-->
+            filter: "all",
+            auto_hide: false
+        },
+        function(data, status){
+            if (status == "success") {
+                $("#table_container").html(data);
+                attach_actions_to_table_controls();
+                review_reservations_status();
+                table_loaded = true;
+            }
+        });
+    };
+
+    function update_date_time(){
+        var ds = new datetime_strings();
+        //$("#txt_current_year").html(ds.year);
+        $("#txt_current_day").html(ds.day);
+        $("#txt_current_month").html(ds.month);
+        $("#txt_current_time").html(ds.time);
+    };
+
+    $(document).ready(function(){
+        update_date_time();
+
+        collect_reservations_table();
+
+        var reservation_status_timer = setInterval(function() {
             update_date_time();
 
-            collect_reservations_table();
+            if (!table_loaded)
+                return;
 
-            var reservation_status_timer = setInterval(function() {
-                update_date_time();
-
-                if (!table_loaded)
-                    return;
-
-                review_reservations_status();
-            },
-            5 * 1000); // every FIVE seconds! (in JavaScript is not exact, no threading)
-        });
+            review_reservations_status();
+        },
+        5 * 1000); // every FIVE seconds! (in JavaScript is not exact, no threading)
+    });
     </script>
 {% endblock %}

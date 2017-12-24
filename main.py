@@ -7,7 +7,6 @@ from configuration import Configuration
 config = Configuration('config.xml')
 print('Connection string: {}'.format(config.connection_string))
 
-
 # App config.
 # DEBUG = True
 app = Flask(__name__)
@@ -57,13 +56,18 @@ def update_reservation():
     fecha = request.form.get('Fecha', None)
     hora = request.form.get('Hora', None)
     notes = request.form.get('Notas', None)
+    id = request.form.get('ID', None)
 
-    if request.form.action is "add":
+    if id:
         Reservas.update_reservation(nombre, telefono, fecha, hora, notes)
-
-    if request.form.action is "edit":
-        id = request.form.get('ID', None)
+    else:
         Reservas.update_reservation(nombre, telefono, fecha, hora, notes, id)
+
+    #TODO: Use problem_report.html to report any errors maybe using a
+    #      render_template('problem_report.html', params.... ), 404
+
+
+
 
     return make_response ("updated", 200)
 
