@@ -48,7 +48,38 @@ def initialize():
 # @app.route("/counter", methods=['GET'])
 # def counter():
 #     return render_template("counter.html")
- 
+
+
+def sample_whatsapp():
+    from whatsapp import Client
+    from yowsup import registration
+
+    # cc: http://www.ipipi.com/help/telephone-country-codes.htm
+    # p_in: <your phone number>
+    # mcc: https://en.wikipedia.org/wiki/Mobile_country_code
+    cr = registration.WACodeRequest(cc="591",
+                               p_in="68901786",
+                               mcc="736",
+                               mnc="02",
+                               method="sms")
+    print ( cr.send() )
+
+    exit(0)
+
+    # cc: http://www.ipipi.com/help/telephone-country-codes.htm
+    # p_in: <your phone number>
+    # code: code received after calling WACodeRequest
+    registration.WARegRequest("591", "68901786", "xxxx")
+
+    exit(0)
+
+    # phone_to = '31641371199'
+    # client = Client(login='3161516888', password='secretpasswordbase64')
+    # client.send_message(phone_to, 'Hello Lola')
+    # client.send_media(phone_to, path='/Users/tax/Desktop/logo.jpg')
+
+
+
 @app.route("/update_reservation", methods=['POST'])
 def update_reservation():
     nombre = request.form.get('Nombre', None)
@@ -139,6 +170,8 @@ def welcome():
 
 if __name__ == "__main__":
     initialize()
+
+    # sample_whatsapp()
 
     Bootstrap(app)
     app.run()
